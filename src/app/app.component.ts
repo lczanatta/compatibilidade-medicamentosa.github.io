@@ -1,143 +1,162 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'compa-medica';
+  compatibilidade: string | undefined = undefined;
 
-  medList  = [
-  {varName : 'acidofolinico' , name: 'ácido folínico'}, //
-  {varName : 'aciclovir' , name: 'aciclovir'}, //
-  {varName : 'acidotranexâmico' , name: 'ácido tranexâmico'}, //
-  {varName : 'adenosina' , name: 'adenosina'}, //
-  {varName : 'adrenalina' , name: 'adrenalina'},
-  {varName : 'albumina' , name: 'albumina'},
-  {varName : 'alteplase' , name: 'alteplase'},
-  {varName : 'amicacina' , name: 'amicacina'},
-  {varName : 'aminofilina' , name: 'aminofilina'},
-  {varName : 'amiodarona' , name: 'amiodarona'},
-  {varName : 'amoxicilinaclavulanato' , name: 'amoxicilina-clavulanato'},
-  {varName : 'ampicilina' , name: 'ampicilina'},
-  {varName : 'ampicilinasulbactam' , name: 'ampicilina-sulbactam'},
-  {varName : 'anfotericinaB' , name: 'anfotericina B'},
-  {varName : 'anidulafungina' , name: 'anidulafungina'},
-  {varName : 'atracurio' , name: 'atracúrio'},
-  {varName : 'atropina' , name: 'atropina'},
-  {varName : 'azitromicina' , name: 'azitromicina'},
-  {varName : 'azuldemetileno' , name: 'azul de metileno'},
-  {varName : 'bicarbonatodesódio' , name: 'bicarbonato de sódio'},
-  {varName : 'cefaLOTina' , name: 'cefaLOTina'},
-  {varName : 'ceFAZolina' , name: 'ceFAZolina'},
-  {varName : 'ceFEPima' , name: 'ceFEPima'},
-  {varName : 'cefoTAXima' , name: 'cefoTAXima'},
-  {varName : 'cefOXitina' , name: 'cefOXitina'},
-  {varName : 'cefTAZidima' , name: 'cefTAZidima'},
-  {varName : 'cefTRIAXona' , name: 'cefTRIAXona'},
-  {varName : 'cefUROxima' , name: 'cefUROxima'},
-  {varName : 'cetamina' , name: 'cetamina'},
-  {varName : 'cetoprofeno' , name: 'cetoprofeno'},
-  {varName : 'ciprofloxacino' , name: 'ciprofloxacino'},
-  {varName : 'clindamicina' , name: 'clindamicina'},
-  {varName : 'clonidina' , name: 'clonidina'},
-  {varName : 'cloretodecalcio' , name: 'cloreto de cálcio (reposição de cálcio)'},
-  {varName : 'cloretodepotassio' , name: 'cloreto de potássio'},
-  {varName : 'clorpromazina' , name: 'clorpromazina'},
-  {varName : 'dantroleno' , name: 'dantroleno'},
-  {varName : 'DESMopressina' , name: 'DESMopressina'},
-  {varName : 'dexametasona' , name: 'dexametasona'},
-  {varName : 'diazepam' , name: 'diazepam'},
-  {varName : 'dimenidratopiridoxina' , name: 'dimenidrato-piridoxina'},
-  {varName : 'dipirona' , name: 'dipirona'},
-  {varName : 'DOBUTamina' , name: 'DOBUTamina'},
-  {varName : 'DOPamina' , name: 'DOPamina'},
-  {varName : 'droperidol' , name: 'droperidol'},
-  {varName : 'esmolol' , name: 'esmolol'},
-  {varName : 'estreptomicina' , name: 'estreptomicina'},
-  {varName : 'fenitoina' , name: 'fenitoína'},
-  {varName : 'fenobarbital' , name: 'fenobarbital'},
-  {varName : 'fentanil' , name: 'fentanil'},
-  {varName : 'ferrocoloidal' , name: 'ferro coloidal'},
-  {varName : 'filgrastima' , name: 'filgrastima'},
-  {varName : 'fitomenadiona' , name: 'fitomenadiona'},
-  {varName : 'fluconazol' , name: 'fluconazol'},
-  {varName : 'flumazenil' , name: 'flumazenil'},
-  {varName : 'fosfatodepotassio' , name: 'fosfato de potássio'},
-  {varName : 'furosemida' , name: 'furosemida'},
-  {varName : 'ganciclovir' , name: 'ganciclovir'},
-  {varName : 'gentamicina' , name: 'gentamicina'},
-  {varName : 'gluconatodecalcio' , name: 'gluconato de cálcio'},
-  {varName : 'haloperidol' , name: 'haloperidol'},
-  {varName : 'heparina' , name: 'heparina'},
-  {varName : 'hidralazina' , name: 'hidralazina'},
-  {varName : 'hidrocortisona' , name: 'hidrocortisona'},
-  {varName : 'hioscina' , name: 'hioscina'},
-  {varName : 'imipenemcilastatina' , name: 'imipenem-cilastatina'},
-  {varName : 'insulinaregular' , name: 'insulina regular'},
-  {varName : 'lanatosideo' , name: 'lanatosídeo'},
-  {varName : 'levofloxacino' , name: 'levofloxacino'},
-  {varName : 'lidocaína' , name: 'lidocaína'},
-  {varName : 'linezolida' , name: 'linezolida'},
-  {varName : 'manitol' , name: 'manitol'},
-  {varName : 'meropenem' , name: 'meropenem'},
-  {varName : 'metilprednisolona' , name: 'metilprednisolona'},
-  {varName : 'metoclopramida' , name: 'metoclopramida'},
-  {varName : 'metoprolol' , name: 'metoprolol'},
-  {varName : 'metronidazol' , name: 'metronidazol'},
-  {varName : 'midazolam' , name: 'midazolam'},
-  {varName : 'milrinona' , name: 'milrinona'},
-  {varName : 'morfina' , name: 'morfina'},
-  {varName : 'naloxona' , name: 'naloxona'},
-  {varName : 'neostigmina' , name: 'neostigmina'},
-  {varName : 'nitroGLICERINA' , name: 'nitroGLICERINA'},
-  {varName : 'nitroPRUSSIATOdesódio' , name: 'nitroPRUSSIATO de sódio'},
-  {varName : 'noradrenalina' , name: 'noradrenalina'},
-  {varName : 'ocitocina' , name: 'ocitocina'},
-  {varName : 'octreotida' , name: 'octreotida'},
-  {varName : 'oligoelementos' , name: 'oligoelementos'},
-  {varName : 'omeprazol' , name: 'omeprazol'},
-  {varName : 'ondansetrona' , name: 'ondansetrona'},
-  {varName : 'oxacilina' , name: 'oxacilina'},
-  {varName : 'pamidronato' , name: 'pamidronato'},
-  {varName : 'pancurônio' , name: 'pancurônio'},
-  {varName : 'penicilinaGpotassica' , name: 'penicilina G potássica'},
-  {varName : 'piperacilinatazobactam' , name: 'piperacilina-tazobactam'},
-  {varName : 'polimixinaB' , name: 'polimixina B'},
-  {varName : 'polivitamínico' , name: 'polivitamínico'},
-  {varName : 'prometazina' , name: 'prometazina'},
-  {varName : 'propofol' , name: 'propofol'},
-  {varName : 'protamina' , name: 'protamina'},
-  {varName : 'ranitidina' , name: 'ranitidina'},
-  {varName : 'remifentanil' , name: 'remifentanil'},
-  {varName : 'ringerlactato' , name: 'ringer lactato'},
-  {varName : 'rocurônio' , name: 'rocurônio'},
-  {varName : 'salbutamol' , name: 'salbutamol'},
-  {varName : 'succinilcolina' , name: 'succinilcolina'},
-  {varName : 'sulfametoxazoltrimetoprima' , name: 'sulfametoxazol-trimetoprima'},
-  {varName : 'sulfatodemagnésio' , name: 'sulfato de magnésio'},
-  {varName : 'tiamina' , name: 'tiamina'},
-  {varName : 'tigeciclina' , name: 'tigeciclina'},
-  {varName : 'tiopental' , name: 'tiopental'},
-  {varName : 'tramadol' , name: 'tramadol'},
-  {varName : 'vancomicina' , name: 'vancomicina'},
-  {varName : 'VASopressina' , name: 'VASopressina'},
-  {varName : 'vitaminasdocomplexoB' , name: 'vitaminas do complexo B'},
-  {varName : 'voriconazol' , name: 'voriconazol'},
-  {varName : 'zidovudina' , name: 'zidovudina'},
-]
+
+  medList = ['ácido folínico',
+  'aciclovir',
+  'ácido tranexâmico',
+  'adenosina',
+  'adrenalina',
+  'albumina',
+  'alteplase',
+  'amicacina',
+  'aminofilina',
+  'amiodarona',
+  'amoxicilina-clavulanato',
+  'ampicilina',
+  'ampicilina-sulbactam',
+  'anfotericina B',
+  'anidulafungina',
+  'atracúrio',
+  'atropina',
+  'azitromicina',
+  'azul de metileno',
+  'bicarbonato de sódio',
+  'cefaLOTina',
+  'ceFAZolina',
+  'ceFEPima',
+  'cefoTAXima',
+  'cefOXitina',
+  'cefTAZidima',
+  'cefTRIAXona',
+  'cefUROxima',
+  'cetamina',
+  'cetoprofeno',
+  'ciprofloxacino',
+  'clindamicina',
+  'clonidina',
+  'cloreto de cálcio',
+  'cloreto de potássio',
+  'clorpromazina',
+  'dantroleno',
+  'DESMopressina',
+  'dexametasona',
+  'diazepam',
+  'dimenidrato-piridoxina',
+  'dipirona',
+  'DOBUTamina',
+  'DOPamina',
+  'droperidol',
+  'esmolol',
+  'estreptomicina',
+  'fenitoína',
+  'fenobarbital',
+  'fentanil',
+  'ferro coloidal',
+  'filgrastima',
+  'fitomenadiona',
+  'fluconazol',
+  'flumazenil',
+  'fosfato de potássio',
+  'furosemida',
+  'ganciclovir',
+  'gentamicina',
+  'gluconato de cálcio',
+  'haloperidol',
+  'heparina',
+  'hidralazina',
+  'hidrocortisona',
+  'hioscina',
+  'imipenem-cilastatina',
+  'insulina regular',
+  'lanatosídeo',
+  'levofloxacino',
+  'lidocaína',
+  'linezolida',
+  'manitol',
+  'meropenem',
+  'metilprednisolona',
+  'metoclopramida',
+  'metoprolol',
+  'metronidazol',
+  'midazolam',
+  'milrinona',
+  'morfina',
+  'naloxona',
+  'neostigmina',
+  'nitroGLICERINA',
+  'nitroPRUSSIATO de sódio',
+  'noradrenalina',
+  'ocitocina',
+  'octreotida',
+  'oligoelementos',
+  'omeprazol',
+  'ondansetrona',
+  'oxacilina',
+  'pamidronato',
+  'pancurônio',
+  'penicilina G potássica',
+  'piperacilina-tazobactam',
+  'polimixina B',
+  'polivitamínico',
+  'prometazina',
+  'propofol',
+  'protamina',
+  'ranitidina',
+  'remifentanil',
+  'ringer lactato',
+  'rocurônio',
+  'salbutamol',
+  'succinilcolina',
+  'sulfametoxazol-trimetoprima',
+  'sulfato de magnésio',
+  'tiamina',
+  'tigeciclina',
+  'tiopental',
+  'tramadol',
+  'vancomicina',
+  'VASopressina',
+  'vitaminas do complexo B',
+  'voriconazol',
+  'zidovudina']
   medMap = new Map<string, string>();
 
   form: FormGroup;
-
-  constructor(private fb: FormBuilder){
+  filteredOptions1: Observable<string[]>;
+  filteredOptions2: Observable<string[]>;
+  constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       medicine1: this.fb.control('', [Validators.required]),
       medicine2: this.fb.control('', [Validators.required])
     });
+    this.filteredOptions1 = this.form.get('medicine1')?.valueChanges.pipe(
+      startWith(''),
+      map(value2 => this._filter(value2))
+    ) as Observable<string[]>;
+
+    this.filteredOptions2 = this.form.get('medicine2')?.valueChanges.pipe(
+      startWith(''),
+      map(value2 => this._filter(value2))
+    ) as Observable<string[]>;
   }
+
+  private _filter(value2: string): string[] {
+    console.log(value2)
+    const filterValue = value2.toLowerCase();
+
+    return this.medList.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  }
+
   ngOnInit(): void {
 
     this.medMap.set('ácido folínicoXaciclovir', 'C');
@@ -321,21 +340,3567 @@ export class AppComponent implements OnInit{
     this.medMap.set('adrenalinaXlidocaína', 'C');
     this.medMap.set('adrenalinaXringer lactato', 'C');
 
+    this.medMap.set('albuminaXcetamina', 'C');
+    this.medMap.set('albuminaXesmolol', 'C');
+    this.medMap.set('albuminaXfurosemida', 'C');
+    this.medMap.set('albuminaXmetoprolol', 'C');
+    this.medMap.set('albuminaXmidazolam', 'I');
+    this.medMap.set('albuminaXringer lactato', 'C');
+    this.medMap.set('albuminaXvancomicina', 'I');
+
+    // verificar com a silvia.
+    // this.medMap.set('alteplaseXDOBUTamina', 'I');
+    // this.medMap.set('alteplaseXDOPamina', 'I');
+    // this.medMap.set('alteplaseXheparina', 'I');
+    // this.medMap.set('alteplaseXlidocaína', 'C');
+    // this.medMap.set('alteplaseXmetoprolol', 'C');
+    // this.medMap.set('alteplaseXnitroGLICERINA', 'I');
+    // this.medMap.set('alteplaseXvancomicina', 'C');
+
+    this.medMap.set('amicacinaXaminofilina', 'C');
+    this.medMap.set('amicacinaXamiodarona', 'C');
+    this.medMap.set('amicacinaXampicilina-sulbactam', 'V');
+    this.medMap.set('amicacinaXanfotericina B', 'I');
+    this.medMap.set('amicacinaXanidulafungina', 'C');
+    this.medMap.set('amicacinaXatracúrio', 'C');
+    this.medMap.set('amicacinaXatropina', 'C');
+    this.medMap.set('amicacinaXazitromicina', 'V');
+    this.medMap.set('amicacinaXbicarbonato de sódio', 'C');
+    this.medMap.set('amicacinaXcefaLOTina', 'C');
+    this.medMap.set('amicacinaXceFAZolina', 'C');
+    this.medMap.set('amicacinaXceFEPima', 'C');
+    this.medMap.set('amicacinaXcefoTAXima', 'C');
+    this.medMap.set('amicacinaXcefOXitina', 'C');
+    this.medMap.set('amicacinaXcefTAZidima', 'C');
+    this.medMap.set('amicacinaXcefTRIAXona', 'C');
+    this.medMap.set('amicacinaXcefUROxima', 'C');
+    this.medMap.set('amicacinaXcetamina', 'C');
+    this.medMap.set('amicacinaXciprofloxacino', 'C');
+    this.medMap.set('amicacinaXclindamicina', 'C');
+    this.medMap.set('amicacinaXcloreto de cálcio', 'C');
+    this.medMap.set('amicacinaXcloreto de potássio', 'C');
+    this.medMap.set('amicacinaXclorpromazina', 'C');
+    this.medMap.set('amicacinaXdantroleno', 'I');
+    this.medMap.set('amicacinaXdexametasona', 'C');
+    this.medMap.set('amicacinaXdiazepam', 'I');
+    this.medMap.set('amicacinaXDOBUTamina', 'C');
+    this.medMap.set('amicacinaXDOPamina', 'C');
+    this.medMap.set('amicacinaXesmolol', 'C');
+    this.medMap.set('amicacinaXfenitoína', 'I');
+    this.medMap.set('amicacinaXfenobarbital', 'C');
+    this.medMap.set('amicacinaXfentanil', 'C');
+    this.medMap.set('amicacinaXfilgrastima', 'C');
+    this.medMap.set('amicacinaXfitomenadiona', 'C');
+    this.medMap.set('amicacinaXfluconazol', 'C');
+    this.medMap.set('amicacinaXfurosemida', 'C');
+    this.medMap.set('amicacinaXganciclovir', 'I');
+    this.medMap.set('amicacinaXgentamicina', 'C');
+    this.medMap.set('amicacinaXgluconato de cálcio', 'C');
+    this.medMap.set('amicacinaXhaloperidol', 'V');
+    this.medMap.set('amicacinaXheparina', 'I');
+    this.medMap.set('amicacinaXhidrocortisona', 'C');
+    this.medMap.set('amicacinaXimipenem-cilastatina', 'C');
+    this.medMap.set('amicacinaXinsulina regular', 'V');
+    this.medMap.set('amicacinaXlevofloxacino', 'C');
+    this.medMap.set('amicacinaXlinezolida', 'C');
+    this.medMap.set('amicacinaXmanitol', 'C');
+    this.medMap.set('amicacinaXmetilprednisolona', 'C');
+    this.medMap.set('amicacinaXmetoclopramida', 'C');
+    this.medMap.set('amicacinaXmetoprolol', 'C');
+    this.medMap.set('amicacinaXmetronidazol', 'C');
+    this.medMap.set('amicacinaXmidazolam', 'C');
+    this.medMap.set('amicacinaXmilrinona', 'C');
+    this.medMap.set('amicacinaXmorfina', 'C');
+    this.medMap.set('amicacinaXnaloxona', 'C');
+    this.medMap.set('amicacinaXnitroGLICERINA', 'C');
+    this.medMap.set('amicacinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('amicacinaXnoradrenalina', 'C');
+    this.medMap.set('amicacinaXocitocina', 'C');
+    this.medMap.set('amicacinaXoctreotida', 'C');
+    this.medMap.set('amicacinaXondansetrona', 'C');
+    this.medMap.set('amicacinaXpamidronato', 'C');
+    this.medMap.set('amicacinaXpancurônio', 'C');
+    this.medMap.set('amicacinaXpenicilina G potássica', 'C');
+    this.medMap.set('amicacinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('amicacinaXpolimixina B', 'C');
+    this.medMap.set('amicacinaXpolivitamínico', 'C');
+    this.medMap.set('amicacinaXprometazina', 'C');
+    this.medMap.set('amicacinaXpropofol', 'I');
+    this.medMap.set('amicacinaXprotamina', 'C');
+    this.medMap.set('amicacinaXranitidina', 'C');
+    this.medMap.set('amicacinaXremifentanil', 'C');
+    this.medMap.set('amicacinaXringer lactato', 'C');
+    this.medMap.set('amicacinaXrocurônio', 'C');
+    this.medMap.set('amicacinaXsuccinilcolina', 'C');
+    this.medMap.set('amicacinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('amicacinaXsulfato de magnésio', 'C');
+    this.medMap.set('amicacinaXtiamina', 'C');
+    this.medMap.set('amicacinaXtigeciclina', 'C');
+    this.medMap.set('amicacinaXvancomicina', 'C');
+    this.medMap.set('amicacinaXVASopressina', 'C');
+    this.medMap.set('amicacinaXvoriconazol', 'C');
+    this.medMap.set('amicacinaXzidovudina', 'C');
+
+    this.medMap.set('aminofilinaXamiodarona', 'I');
+    this.medMap.set('aminofilinaXampicilina', 'I');
+    this.medMap.set('aminofilinaXampicilina-sulbactam', 'V');
+    this.medMap.set('aminofilinaXanfotericina B', 'I');
+    this.medMap.set('aminofilinaXanidulafungina', 'C');
+    this.medMap.set('aminofilinaXatracúrio', 'I');
+    this.medMap.set('aminofilinaXatropina', 'C');
+    this.medMap.set('aminofilinaXazitromicina', 'C');
+    this.medMap.set('aminofilinaXbicarbonato de sódio', 'C');
+    this.medMap.set('aminofilinaXcefaLOTina', 'C');
+    this.medMap.set('aminofilinaXceFAZolina', 'C');
+    this.medMap.set('aminofilinaXcefoTAXima', 'C');
+    this.medMap.set('aminofilinaXcefOXitina', 'C');
+    this.medMap.set('aminofilinaXcefTAZidima', 'C');
+    this.medMap.set('aminofilinaXcefTRIAXona', 'C');
+    this.medMap.set('aminofilinaXcefUROxima', 'C');
+    this.medMap.set('aminofilinaXciprofloxacino', 'I');
+    this.medMap.set('aminofilinaXclindamicina', 'C');
+    this.medMap.set('aminofilinaXclonidina', 'C');
+    this.medMap.set('aminofilinaXcloreto de cálcio (reposição de cálcio)', 'C');
+    this.medMap.set('aminofilinaXcloreto de potássio', 'C');
+    this.medMap.set('aminofilinaXclorpromazina', 'I');
+    this.medMap.set('aminofilinaXdantroleno', 'I');
+    this.medMap.set('aminofilinaXdexametasona', 'C');
+    this.medMap.set('aminofilinaXdiazepam', 'I');
+    this.medMap.set('aminofilinaXDOBUTamina', 'I');
+    this.medMap.set('aminofilinaXDOPamina', 'C');
+    this.medMap.set('aminofilinaXesmolol', 'C');
+    this.medMap.set('aminofilinaXestreptomicina', 'C');
+    this.medMap.set('aminofilinaXfenitoína', 'I');
+    this.medMap.set('aminofilinaXfenobarbital', 'C');
+    this.medMap.set('aminofilinaXfentanil', 'C');
+    this.medMap.set('aminofilinaXfilgrastima', 'C');
+    this.medMap.set('aminofilinaXfitomenadiona', 'C');
+    this.medMap.set('aminofilinaXfluconazol', 'C');
+    this.medMap.set('aminofilinaXflumazenil', 'C');
+    this.medMap.set('aminofilinaXfurosemida', 'C');
+    this.medMap.set('aminofilinaXganciclovir', 'I');
+    this.medMap.set('aminofilinaXgentamicina', 'C');
+    this.medMap.set('aminofilinaXgluconato de cálcio', 'C');
+    this.medMap.set('aminofilinaXhaloperidol', 'I');
+    this.medMap.set('aminofilinaXheparina', 'C');
+    this.medMap.set('aminofilinaXhidralazina', 'V');
+    this.medMap.set('aminofilinaXhidrocortisona', 'C');
+    this.medMap.set('aminofilinaXimipenem-cilastatina', 'V');
+    this.medMap.set('aminofilinaXinsulina regular', 'C');
+    this.medMap.set('aminofilinaXlevofloxacino', 'C');
+    this.medMap.set('aminofilinaXlidocaína', 'C');
+    this.medMap.set('aminofilinaXlinezolida', 'C');
+    this.medMap.set('aminofilinaXmanitol', 'C');
+    this.medMap.set('aminofilinaXmeropenem', 'C');
+    this.medMap.set('aminofilinaXmetilprednisolona', 'C');
+    this.medMap.set('aminofilinaXmetoclopramida', 'C');
+    this.medMap.set('aminofilinaXmetoprolol', 'C');
+    this.medMap.set('aminofilinaXmetronidazol', 'C');
+    this.medMap.set('aminofilinaXmidazolam', 'I');
+    this.medMap.set('aminofilinaXmilrinona', 'C');
+    this.medMap.set('aminofilinaXmorfina', 'C');
+    this.medMap.set('aminofilinaXnaloxona', 'V');
+    this.medMap.set('aminofilinaXnitroGLICERINA', 'C');
+    this.medMap.set('aminofilinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('aminofilinaXnoradrenalina', 'I');
+    this.medMap.set('aminofilinaXocitocina', 'C');
+    this.medMap.set('aminofilinaXoctreotida', 'C');
+    this.medMap.set('aminofilinaXondansetrona', 'I');
+    this.medMap.set('aminofilinaXoxacilina', 'C');
+    this.medMap.set('aminofilinaXpamidronato', 'C');
+    this.medMap.set('aminofilinaXpancurônio', 'C');
+    this.medMap.set('aminofilinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('aminofilinaXpolimixina B', 'C');
+    this.medMap.set('aminofilinaXpolivitamínico', 'C');
+    this.medMap.set('aminofilinaXprometazina', 'I');
+    this.medMap.set('aminofilinaXpropofol', 'C');
+    this.medMap.set('aminofilinaXprotamina', 'C');
+    this.medMap.set('aminofilinaXranitidina', 'C');
+    this.medMap.set('aminofilinaXremifentanil', 'C');
+    this.medMap.set('aminofilinaXringer lactato', 'C');
+    this.medMap.set('aminofilinaXrocurônio', 'C');
+    this.medMap.set('aminofilinaXsalbutamol', 'C');
+    this.medMap.set('aminofilinaXsuccinilcolina', 'C');
+    this.medMap.set('aminofilinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('aminofilinaXsulfato de magnésio', 'I');
+    this.medMap.set('aminofilinaXtiamina', 'I');
+    this.medMap.set('aminofilinaXtigeciclina', 'C');
+    this.medMap.set('aminofilinaXvancomicina', 'I');
+    this.medMap.set('aminofilinaXVASopressina', 'C');
+    this.medMap.set('aminofilinaXvoriconazol', 'C');
+
+
+    this.medMap.set('amiodaronaXamoxicilina-clavulanato', 'I');
+    this.medMap.set('amiodaronaXampicilina', 'I');
+    this.medMap.set('amiodaronaXampicilina-sulbactam', 'I');
+    this.medMap.set('amiodaronaXanfotericina B', 'V');
+    this.medMap.set('amiodaronaXanidulafungina', 'C');
+    this.medMap.set('amiodaronaXatracúrio', 'C');
+    this.medMap.set('amiodaronaXatropina', 'C');
+    this.medMap.set('amiodaronaXazitromicina', 'I');
+    this.medMap.set('amiodaronaXbicarbonato de sódio', 'I');
+    this.medMap.set('amiodaronaXceFAZolina', 'V');
+    this.medMap.set('amiodaronaXceFEPima', 'C');
+    this.medMap.set('amiodaronaXcefoTAXima', 'I');
+    this.medMap.set('amiodaronaXcefTAZidima', 'I');
+    this.medMap.set('amiodaronaXcefTRIAXona', 'V');
+    this.medMap.set('amiodaronaXcefUROxima', 'V');
+    this.medMap.set('amiodaronaXcetamina', 'C');
+    this.medMap.set('amiodaronaXciprofloxacino', 'C');
+    this.medMap.set('amiodaronaXclindamicina', 'C');
+    this.medMap.set('amiodaronaXcloreto de cálcio (reposição de cálcio)', 'C');
+    this.medMap.set('amiodaronaXcloreto de potássio', 'V');
+    this.medMap.set('amiodaronaXclorpromazina', 'C');
+    this.medMap.set('amiodaronaXdantroleno', 'I');
+    this.medMap.set('amiodaronaXdexametasona', 'I');
+    this.medMap.set('amiodaronaXdiazepam', 'I');
+    this.medMap.set('amiodaronaXDOBUTamina', 'V');
+    this.medMap.set('amiodaronaXDOPamina', 'C');
+    this.medMap.set('amiodaronaXdroperidol', 'C');
+    this.medMap.set('amiodaronaXesmolol', 'C');
+    this.medMap.set('amiodaronaXfenitoína', 'I');
+    this.medMap.set('amiodaronaXfenobarbital', 'I');
+    this.medMap.set('amiodaronaXfentanil', 'V');
+    this.medMap.set('amiodaronaXfluconazol', 'C');
+    this.medMap.set('amiodaronaXfosfato de potássio', 'I');
+    this.medMap.set('amiodaronaXfurosemida', 'V');
+    this.medMap.set('amiodaronaXganciclovir', 'I');
+    this.medMap.set('amiodaronaXgentamicina', 'C');
+    this.medMap.set('amiodaronaXgluconato de cálcio', 'V');
+    this.medMap.set('amiodaronaXhaloperidol', 'V');
+    this.medMap.set('amiodaronaXheparina', 'I');
+    this.medMap.set('amiodaronaXhidralazina', 'C');
+    this.medMap.set('amiodaronaXhidrocortisona', 'I');
+    this.medMap.set('amiodaronaXimipenem-cilastatina', 'I');
+    this.medMap.set('amiodaronaXlevofloxacino', 'I');
+    this.medMap.set('amiodaronaXlidocaína', 'C');
+    this.medMap.set('amiodaronaXlinezolida', 'C');
+    this.medMap.set('amiodaronaXmanitol', 'C');
+    this.medMap.set('amiodaronaXmeropenem', 'I');
+    this.medMap.set('amiodaronaXmetoclopramida', 'C');
+    this.medMap.set('amiodaronaXmetoprolol', 'C');
+    this.medMap.set('amiodaronaXmetronidazol', 'C');
+    this.medMap.set('amiodaronaXmidazolam', 'C');
+    this.medMap.set('amiodaronaXmilrinona', 'C');
+    this.medMap.set('amiodaronaXmorfina', 'C');
+    this.medMap.set('amiodaronaXnaloxona', 'C');
+    this.medMap.set('amiodaronaXnitroGLICERINA', 'C');
+    this.medMap.set('amiodaronaXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('amiodaronaXnoradrenalina', 'V');
+    this.medMap.set('amiodaronaXoctreotida', 'C');
+    this.medMap.set('amiodaronaXondansetrona', 'C');
+    this.medMap.set('amiodaronaXpancurônio', 'C');
+    this.medMap.set('amiodaronaXpenicilina G potássica', 'C');
+    this.medMap.set('amiodaronaXpiperacilina-tazobactam', 'I');
+    this.medMap.set('amiodaronaXpolimixina B', 'C');
+    this.medMap.set('amiodaronaXprometazina', 'C');
+    this.medMap.set('amiodaronaXranitidina', 'I');
+    this.medMap.set('amiodaronaXremifentanil', 'C');
+    this.medMap.set('amiodaronaXringer lactato', 'C');
+    this.medMap.set('amiodaronaXrocurônio', 'C');
+    this.medMap.set('amiodaronaXsuccinilcolina', 'C');
+    this.medMap.set('amiodaronaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('amiodaronaXsulfato de magnésio', 'V');
+    this.medMap.set('amiodaronaXtigeciclina', 'I');
+    this.medMap.set('amiodaronaXtiopental', 'I');
+    this.medMap.set('amiodaronaXtramadol', 'C');
+    this.medMap.set('amiodaronaXvancomicina', 'C');
+    this.medMap.set('amiodaronaXVASopressina', 'C');
+    this.medMap.set('amiodaronaXvoriconazol', 'C');
+    this.medMap.set('amiodaronaXzidovudina', 'C');
+
+    this.medMap.set('amoxicilina-clavulanatoXpropofol', 'C');
+    this.medMap.set('amoxicilina-clavulanatoXringer lactato', 'C');
+    this.medMap.set('amoxicilina-clavulanatoXtramadol', 'C');
+    this.medMap.set('amoxicilina-clavulanatoXvancomicina', 'C');
+
+    this.medMap.set('ampicilinaXanfotericina B', 'I');
+    this.medMap.set('ampicilinaXanidulafungina', 'C');
+    this.medMap.set('ampicilinaXazitromicina', 'C');
+    this.medMap.set('ampicilinaXcetamina', 'I');
+    this.medMap.set('ampicilinaXclorpromazina', 'I');
+    this.medMap.set('ampicilinaXdantroleno', 'I');
+    this.medMap.set('ampicilinaXdiazepam', 'I');
+    this.medMap.set('ampicilinaXDOBUTamina', 'I');
+    this.medMap.set('ampicilinaXesmolol', 'V');
+    this.medMap.set('ampicilinaXfenitoína', 'I');
+    this.medMap.set('ampicilinaXfilgrastima', 'C');
+    this.medMap.set('ampicilinaXfluconazol', 'I');
+    this.medMap.set('ampicilinaXganciclovir', 'I');
+    this.medMap.set('ampicilinaXhaloperidol', 'I');
+    this.medMap.set('ampicilinaXheparina', 'V');
+    this.medMap.set('ampicilinaXinsulina regular', 'V');
+    this.medMap.set('ampicilinaXlevofloxacino', 'C');
+    this.medMap.set('ampicilinaXlinezolida', 'C');
+    this.medMap.set('ampicilinaXmanitol', 'C');
+    this.medMap.set('ampicilinaXmetronidazol', 'C');
+    this.medMap.set('ampicilinaXmidazolam', 'I');
+    this.medMap.set('ampicilinaXmilrinona', 'C');
+    this.medMap.set('ampicilinaXoctreotida', 'C');
+    this.medMap.set('ampicilinaXondansetrona', 'I');
+    this.medMap.set('ampicilinaXpamidronato', 'C');
+    this.medMap.set('ampicilinaXpancurônio', 'C');
+    this.medMap.set('ampicilinaXpolivitamínico', 'V');
+    this.medMap.set('ampicilinaXpropofol', 'C');
+    this.medMap.set('ampicilinaXprotamina', 'I');
+    this.medMap.set('ampicilinaXremifentanil', 'C');
+    this.medMap.set('ampicilinaXrocurônio', 'C');
+    this.medMap.set('ampicilinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ampicilinaXsulfato de magnésio', 'V');
+    this.medMap.set('ampicilinaXtigeciclina', 'C');
+    this.medMap.set('ampicilinaXvancomicina', 'V');
+    this.medMap.set('ampicilinaXVASopressina', 'V');
+    this.medMap.set('ampicilinaXvoriconazol', 'C');
+
+    this.medMap.set('ampicilina-sulbactamXanfotericina B', 'I');
+    this.medMap.set('ampicilina-sulbactamXanidulafungina', 'C');
+    this.medMap.set('ampicilina-sulbactamXazitromicina', 'C');
+    this.medMap.set('ampicilina-sulbactamXceFEPima', 'C');
+    this.medMap.set('ampicilina-sulbactamXciprofloxacino', 'I');
+    this.medMap.set('ampicilina-sulbactamXclorpromazina', 'I');
+    this.medMap.set('ampicilina-sulbactamXdantroleno', 'I');
+    this.medMap.set('ampicilina-sulbactamXdiazepam', 'I');
+    this.medMap.set('ampicilina-sulbactamXDOBUTamina', 'I');
+    this.medMap.set('ampicilina-sulbactamXfenitoína', 'I');
+    this.medMap.set('ampicilina-sulbactamXfilgrastima', 'C');
+    this.medMap.set('ampicilina-sulbactamXganciclovir', 'I');
+    this.medMap.set('ampicilina-sulbactamXhaloperidol', 'I');
+    this.medMap.set('ampicilina-sulbactamXheparina', 'C');
+    this.medMap.set('ampicilina-sulbactamXhidralazina', 'I');
+    this.medMap.set('ampicilina-sulbactamXhidrocortisona', 'I');
+    this.medMap.set('ampicilina-sulbactamXinsulina regular', 'C');
+    this.medMap.set('ampicilina-sulbactamXlevofloxacino', 'C');
+    this.medMap.set('ampicilina-sulbactamXlinezolida', 'C');
+    this.medMap.set('ampicilina-sulbactamXmetilprednisolona', 'I');
+    this.medMap.set('ampicilina-sulbactamXmetronidazol', 'C');
+    this.medMap.set('ampicilina-sulbactamXmidazolam', 'I');
+    this.medMap.set('ampicilina-sulbactamXmilrinona', 'C');
+    this.medMap.set('ampicilina-sulbactamXmorfina', 'V');
+    this.medMap.set('ampicilina-sulbactamXoctreotida', 'C');
+    this.medMap.set('ampicilina-sulbactamXondansetrona', 'I');
+    this.medMap.set('ampicilina-sulbactamXpamidronato', 'C');
+    this.medMap.set('ampicilina-sulbactamXpancurônio', 'C');
+    this.medMap.set('ampicilina-sulbactamXprometazina', 'I');
+    this.medMap.set('ampicilina-sulbactamXprotamina', 'I');
+    this.medMap.set('ampicilina-sulbactamXremifentanil', 'C');
+    this.medMap.set('ampicilina-sulbactamXrocurônio', 'C');
+    this.medMap.set('ampicilina-sulbactamXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ampicilina-sulbactamXtigeciclina', 'C');
+    this.medMap.set('ampicilina-sulbactamXtramadol', 'C');
+    this.medMap.set('ampicilina-sulbactamXvancomicina', 'V');
+    this.medMap.set('ampicilina-sulbactamXVASopressina', 'V');
+    this.medMap.set('ampicilina-sulbactamXvoriconazol', 'C');
+
+    this.medMap.set('anfotericina BXanidulafungina', 'I');
+    this.medMap.set('anfotericina BXatracúrio', 'I');
+    this.medMap.set('anfotericina BXatropina', 'I');
+    this.medMap.set('anfotericina BXazitromicina', 'I');
+    this.medMap.set('anfotericina BXbicarbonato de sódio', 'I');
+    this.medMap.set('anfotericina BXcefaLOTina', 'I');
+    this.medMap.set('anfotericina BXceFAZolina', 'I');
+    this.medMap.set('anfotericina BXceFEPima', 'I');
+    this.medMap.set('anfotericina BXcefoTAXima', 'I');
+    this.medMap.set('anfotericina BXcefOXitina', 'I');
+    this.medMap.set('anfotericina BXcefTAZidima', 'I');
+    this.medMap.set('anfotericina BXcefTRIAXona', 'I');
+    this.medMap.set('anfotericina BXcefUROxima', 'I');
+    this.medMap.set('anfotericina BXclindamicina', 'I');
+    this.medMap.set('anfotericina BXcloreto de cálcio (reposição de cálcio)', 'I');
+    this.medMap.set('anfotericina BXcloreto de potássio', 'I');
+    this.medMap.set('anfotericina BXclorpromazina', 'I');
+    this.medMap.set('anfotericina BXdantroleno', 'I');
+    this.medMap.set('anfotericina BXdexametasona', 'I');
+    this.medMap.set('anfotericina BXdiazepam', 'I');
+    this.medMap.set('anfotericina BXDOBUTamina', 'I');
+    this.medMap.set('anfotericina BXDOPamina', 'I');
+    this.medMap.set('anfotericina BXesmolol', 'I');
+    this.medMap.set('anfotericina BXestreptomicina', 'I');
+    this.medMap.set('anfotericina BXfenitoína', 'I');
+    this.medMap.set('anfotericina BXfenobarbital', 'I');
+    this.medMap.set('anfotericina BXfentanil', 'I');
+    this.medMap.set('anfotericina BXfilgrastima', 'I');
+    this.medMap.set('anfotericina BXfitomenadiona', 'I');
+    this.medMap.set('anfotericina BXfluconazol', 'I');
+    this.medMap.set('anfotericina BXfurosemida', 'I');
+    this.medMap.set('anfotericina BXganciclovir', 'I');
+    this.medMap.set('anfotericina BXgentamicina', 'I');
+    this.medMap.set('anfotericina BXgluconato de cálcio', 'I');
+    this.medMap.set('anfotericina BXhaloperidol', 'I');
+    this.medMap.set('anfotericina BXheparina', 'I');
+    this.medMap.set('anfotericina BXhidralazina', 'I');
+    this.medMap.set('anfotericina BXhidrocortisona', 'I');
+    this.medMap.set('anfotericina BXimipenem-cilastatina', 'I');
+    this.medMap.set('anfotericina BXinsulina regular', 'I');
+    this.medMap.set('anfotericina BXlevofloxacino', 'I');
+    this.medMap.set('anfotericina BXlidocaína', 'I');
+    this.medMap.set('anfotericina BXlinezolida', 'I');
+    this.medMap.set('anfotericina BXmanitol', 'I');
+    this.medMap.set('anfotericina BXmeropenem', 'I');
+    this.medMap.set('anfotericina BXmetilprednisolona', 'I');
+    this.medMap.set('anfotericina BXmetoclopramida', 'I');
+    this.medMap.set('anfotericina BXmetoprolol', 'I');
+    this.medMap.set('anfotericina BXmetronidazol', 'I');
+    this.medMap.set('anfotericina BXmidazolam', 'I');
+    this.medMap.set('anfotericina BXmilrinona', 'I');
+    this.medMap.set('anfotericina BXmorfina', 'I');
+    this.medMap.set('anfotericina BXnaloxona', 'I');
+    this.medMap.set('anfotericina BXnitroGLICERINA', 'I');
+    this.medMap.set('anfotericina BXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('anfotericina BXnoradrenalina', 'I');
+    this.medMap.set('anfotericina BXocitocina', 'I');
+    this.medMap.set('anfotericina BXoctreotida', 'C');
+    this.medMap.set('anfotericina BXondansetrona', 'I');
+    this.medMap.set('anfotericina BXoxacilina', 'I');
+    this.medMap.set('anfotericina BXpamidronato', 'I');
+    this.medMap.set('anfotericina BXpancurônio', 'I');
+    this.medMap.set('anfotericina BXpenicilina G potássica', 'I');
+    this.medMap.set('anfotericina BXpiperacilina-tazobactam', 'I');
+    this.medMap.set('anfotericina BXpolimixina B', 'I');
+    this.medMap.set('anfotericina BXpolivitamínico', 'I');
+    this.medMap.set('anfotericina BXprometazina', 'I');
+    this.medMap.set('anfotericina BXpropofol', 'I');
+    this.medMap.set('anfotericina BXprotamina', 'I');
+    this.medMap.set('anfotericina BXranitidina', 'I');
+    this.medMap.set('anfotericina BXremifentanil', 'I');
+    this.medMap.set('anfotericina BXringer lactato', 'I');
+    this.medMap.set('anfotericina BXrocurônio', 'I');
+    this.medMap.set('anfotericina BXsuccinilcolina', 'I');
+    this.medMap.set('anfotericina BXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('anfotericina BXsulfato de magnésio', 'I');
+    this.medMap.set('anfotericina BXtiamina', 'I');
+    this.medMap.set('anfotericina BXtigeciclina', 'I');
+    this.medMap.set('anfotericina BXvancomicina', 'I');
+    this.medMap.set('anfotericina BXVASopressina', 'I');
+    this.medMap.set('anfotericina BXvoriconazol', 'I');
+    this.medMap.set('anfotericina BXzidovudina', 'C');
+
+    this.medMap.set('anidulafunginaXatracúrio', 'C');
+    this.medMap.set('anidulafunginaXazitromicina', 'C');
+    this.medMap.set('anidulafunginaXbicarbonato de sódio', 'I');
+    this.medMap.set('anidulafunginaXceFAZolina', 'C');
+    this.medMap.set('anidulafunginaXceFEPima', 'C');
+    this.medMap.set('anidulafunginaXcefoTAXima', 'C');
+    this.medMap.set('anidulafunginaXcefOXitina', 'C');
+    this.medMap.set('anidulafunginaXcefTAZidima', 'C');
+    this.medMap.set('anidulafunginaXcefTRIAXona', 'C');
+    this.medMap.set('anidulafunginaXcefUROxima', 'C');
+    this.medMap.set('anidulafunginaXciprofloxacino', 'C');
+    this.medMap.set('anidulafunginaXclindamicina', 'C');
+    this.medMap.set('anidulafunginaXcloreto de cálcio (reposição de cálcio)', 'C');
+    this.medMap.set('anidulafunginaXcloreto de potássio', 'C');
+    this.medMap.set('anidulafunginaXclorpromazina', 'C');
+    this.medMap.set('anidulafunginaXdantroleno', 'I');
+    this.medMap.set('anidulafunginaXdexametasona', 'C');
+    this.medMap.set('anidulafunginaXdiazepam', 'I');
+    this.medMap.set('anidulafunginaXDOBUTamina', 'C');
+    this.medMap.set('anidulafunginaXDOPamina', 'C');
+    this.medMap.set('anidulafunginaXdroperidol', 'C');
+    this.medMap.set('anidulafunginaXesmolol', 'C');
+    this.medMap.set('anidulafunginaXfenitoína', 'I');
+    this.medMap.set('anidulafunginaXfenobarbital', 'C');
+    this.medMap.set('anidulafunginaXfentanil', 'C');
+    this.medMap.set('anidulafunginaXfluconazol', 'C');
+    this.medMap.set('anidulafunginaXfosfato de potássio', 'I');
+    this.medMap.set('anidulafunginaXfurosemida', 'C');
+    this.medMap.set('anidulafunginaXganciclovir', 'C');
+    this.medMap.set('anidulafunginaXgentamicina', 'C');
+    this.medMap.set('anidulafunginaXgluconato de cálcio', 'C');
+    this.medMap.set('anidulafunginaXhaloperidol', 'C');
+    this.medMap.set('anidulafunginaXheparina', 'C');
+    this.medMap.set('anidulafunginaXhidralazina', 'C');
+    this.medMap.set('anidulafunginaXhidrocortisona', 'C');
+    this.medMap.set('anidulafunginaXimipenem-cilastatina', 'C');
+    this.medMap.set('anidulafunginaXinsulina regular', 'C');
+    this.medMap.set('anidulafunginaXlevofloxacino', 'C');
+    this.medMap.set('anidulafunginaXlidocaína', 'C');
+    this.medMap.set('anidulafunginaXlinezolida', 'C');
+    this.medMap.set('anidulafunginaXmanitol', 'C');
+    this.medMap.set('anidulafunginaXmeropenem', 'C');
+    this.medMap.set('anidulafunginaXmetilprednisolona', 'C');
+    this.medMap.set('anidulafunginaXmetoclopramida', 'C');
+    this.medMap.set('anidulafunginaXmetoprolol', 'C');
+    this.medMap.set('anidulafunginaXmetronidazol', 'C');
+    this.medMap.set('anidulafunginaXmidazolam', 'C');
+    this.medMap.set('anidulafunginaXmilrinona', 'C');
+    this.medMap.set('anidulafunginaXmorfina', 'C');
+    this.medMap.set('anidulafunginaXnaloxona', 'C');
+    this.medMap.set('anidulafunginaXnitroGLICERINA', 'C');
+    this.medMap.set('anidulafunginaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('anidulafunginaXnoradrenalina', 'C');
+    this.medMap.set('anidulafunginaXocitocina', 'C');
+    this.medMap.set('anidulafunginaXoctreotida', 'C');
+    this.medMap.set('anidulafunginaXondansetrona', 'C');
+    this.medMap.set('anidulafunginaXpamidronato', 'C');
+    this.medMap.set('anidulafunginaXpancurônio', 'C');
+    this.medMap.set('anidulafunginaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('anidulafunginaXpolimixina B', 'C');
+    this.medMap.set('anidulafunginaXprometazina', 'C');
+    this.medMap.set('anidulafunginaXranitidina', 'C');
+    this.medMap.set('anidulafunginaXremifentanil', 'C');
+    this.medMap.set('anidulafunginaXrocurônio', 'C');
+    this.medMap.set('anidulafunginaXsuccinilcolina', 'C');
+    this.medMap.set('anidulafunginaXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('anidulafunginaXsulfato de magnésio', 'I');
+    this.medMap.set('anidulafunginaXtiopental', 'C');
+    this.medMap.set('anidulafunginaXvancomicina', 'C');
+    this.medMap.set('anidulafunginaXVASopressina', 'C');
+    this.medMap.set('anidulafunginaXvoriconazol', 'C');
+    this.medMap.set('anidulafunginaXzidovudina', 'C');
+
+    this.medMap.set('atracúrioXatropina', 'C');
+    this.medMap.set('atracúrioXazitromicina', 'C');
+    this.medMap.set('atracúrioXbicarbonato de sódio', 'I');
+    this.medMap.set('atracúrioXcefaLOTina', 'I');
+    this.medMap.set('atracúrioXceFAZolina', 'C');
+    this.medMap.set('atracúrioXcefoTAXima', 'C');
+    this.medMap.set('atracúrioXcefOXitina', 'C');
+    this.medMap.set('atracúrioXcefTAZidima', 'I');
+    this.medMap.set('atracúrioXcefTRIAXona', 'C');
+    this.medMap.set('atracúrioXcefUROxima', 'C');
+    this.medMap.set('atracúrioXciprofloxacino', 'C');
+    this.medMap.set('atracúrioXclindamicina', 'C');
+    this.medMap.set('atracúrioXcloreto de cálcio (reposição de cálcio)', 'C');
+    this.medMap.set('atracúrioXcloreto de potássio', 'C');
+    this.medMap.set('atracúrioXclorpromazina', 'C');
+    this.medMap.set('atracúrioXdantroleno', 'I');
+    this.medMap.set('atracúrioXdexametasona', 'C');
+    this.medMap.set('atracúrioXdiazepam', 'I');
+    this.medMap.set('atracúrioXDOBUTamina', 'C');
+    this.medMap.set('atracúrioXDOPamina', 'C');
+    this.medMap.set('atracúrioXesmolol', 'C');
+    this.medMap.set('atracúrioXfenitoína', 'I');
+    this.medMap.set('atracúrioXfenobarbital', 'I');
+    this.medMap.set('atracúrioXfentanil', 'C');
+    this.medMap.set('atracúrioXfitomenadiona', 'C');
+    this.medMap.set('atracúrioXfluconazol', 'C');
+    this.medMap.set('atracúrioXfurosemida', 'I');
+    this.medMap.set('atracúrioXganciclovir', 'I');
+    this.medMap.set('atracúrioXgentamicina', 'C');
+    this.medMap.set('atracúrioXgluconato de cálcio', 'C');
+    this.medMap.set('atracúrioXhidrocortisona', 'C');
+    this.medMap.set('atracúrioXimipenem-cilastatina', 'C');
+    this.medMap.set('atracúrioXlevofloxacino', 'C');
+    this.medMap.set('atracúrioXlidocaína', 'C');
+    this.medMap.set('atracúrioXlinezolida', 'C');
+    this.medMap.set('atracúrioXmanitol', 'C');
+    this.medMap.set('atracúrioXmetilprednisolona', 'C');
+    this.medMap.set('atracúrioXmetoclopramida', 'C');
+    this.medMap.set('atracúrioXmetoprolol', 'C');
+    this.medMap.set('atracúrioXmetronidazol', 'C');
+    this.medMap.set('atracúrioXmidazolam', 'C');
+    this.medMap.set('atracúrioXmilrinona', 'C');
+    this.medMap.set('atracúrioXmorfina', 'C');
+    this.medMap.set('atracúrioXnaloxona', 'C');
+    this.medMap.set('atracúrioXnitroGLICERINA', 'C');
+    this.medMap.set('atracúrioXnoradrenalina', 'C');
+    this.medMap.set('atracúrioXocitocina', 'C');
+    this.medMap.set('atracúrioXoctreotida', 'C');
+    this.medMap.set('atracúrioXondansetrona', 'C');
+    this.medMap.set('atracúrioXoxacilina', 'C');
+    this.medMap.set('atracúrioXpamidronato', 'C');
+    this.medMap.set('atracúrioXpenicilina G potássica', 'C');
+    this.medMap.set('atracúrioXpolimixina B', 'C');
+    this.medMap.set('atracúrioXpolivitamínico', 'C');
+    this.medMap.set('atracúrioXprometazina', 'C');
+    this.medMap.set('atracúrioXpropofol', 'I');
+    this.medMap.set('atracúrioXprotamina', 'C');
+    this.medMap.set('atracúrioXranitidina', 'C');
+    this.medMap.set('atracúrioXringer lactato', 'C');
+    this.medMap.set('atracúrioXsuccinilcolina', 'C');
+    this.medMap.set('atracúrioXsulfato de magnésio', 'C');
+    this.medMap.set('atracúrioXtiamina', 'C');
+    this.medMap.set('atracúrioXtigeciclina', 'C');
+    this.medMap.set('atracúrioXtiopental', 'I');
+    this.medMap.set('atracúrioXvancomicina', 'C');
+    this.medMap.set('atracúrioXVASopressina', 'C');
+
+    this.medMap.set('atropinaXbicarbonato de sódio', 'C');
+    this.medMap.set('atropinaXceFAZolina', 'C');
+    this.medMap.set('atropinaXcefoTAXima', 'C');
+    this.medMap.set('atropinaXcefOXitina', 'C');
+    this.medMap.set('atropinaXcefTAZidima', 'C');
+    this.medMap.set('atropinaXcefTRIAXona', 'C');
+    this.medMap.set('atropinaXcefUROxima', 'C');
+    this.medMap.set('atropinaXcetamina', 'C');
+    this.medMap.set('atropinaXclindamicina', 'C');
+    this.medMap.set('atropinaXcloreto de cálcio (reposição de cálcio)', 'C');
+    this.medMap.set('atropinaXcloreto de potássio', 'C');
+    this.medMap.set('atropinaXclorpromazina', 'C');
+    this.medMap.set('atropinaXdantroleno', 'I');
+    this.medMap.set('atropinaXdexametasona', 'C');
+    this.medMap.set('atropinaXdiazepam', 'I');
+    this.medMap.set('atropinaXDOBUTamina', 'C');
+    this.medMap.set('atropinaXDOPamina', 'C');
+    this.medMap.set('atropinaXesmolol', 'C');
+    this.medMap.set('atropinaXestreptomicina', 'C');
+    this.medMap.set('atropinaXfenitoína', 'I');
+    this.medMap.set('atropinaXfenobarbital', 'C');
+    this.medMap.set('atropinaXfentanil', 'C');
+    this.medMap.set('atropinaXfitomenadiona', 'C');
+    this.medMap.set('atropinaXfluconazol', 'C');
+    this.medMap.set('atropinaXfurosemida', 'C');
+    this.medMap.set('atropinaXganciclovir', 'C');
+    this.medMap.set('atropinaXgentamicina', 'C');
+    this.medMap.set('atropinaXgluconato de cálcio', 'C');
+    this.medMap.set('atropinaXheparina', 'C');
+    this.medMap.set('atropinaXhidralazina', 'V');
+    this.medMap.set('atropinaXhidrocortisona', 'C');
+    this.medMap.set('atropinaXimipenem-cilastatina', 'C');
+    this.medMap.set('atropinaXinsulina regular', 'C');
+    this.medMap.set('atropinaXlidocaína', 'C');
+    this.medMap.set('atropinaXmanitol', 'C');
+    this.medMap.set('atropinaXmeropenem', 'C');
+    this.medMap.set('atropinaXmetilprednisolona', 'C');
+    this.medMap.set('atropinaXmetoclopramida', 'C');
+    this.medMap.set('atropinaXmetoprolol', 'C');
+    this.medMap.set('atropinaXmidazolam', 'C');
+    this.medMap.set('atropinaXmilrinona', 'C');
+    this.medMap.set('atropinaXmorfina', 'C');
+    this.medMap.set('atropinaXnaloxona', 'C');
+    this.medMap.set('atropinaXnitroGLICERINA', 'C');
+    this.medMap.set('atropinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('atropinaXnoradrenalina', 'C');
+    this.medMap.set('atropinaXocitocina', 'C');
+    this.medMap.set('atropinaXondansetrona', 'C');
+    this.medMap.set('atropinaXoxacilina', 'C');
+    this.medMap.set('atropinaXpenicilina G potássica', 'C');
+    this.medMap.set('atropinaXpolimixina B', 'C');
+    this.medMap.set('atropinaXpolivitamínico', 'C');
+    this.medMap.set('atropinaXprometazina', 'C');
+    this.medMap.set('atropinaXprotamina', 'C');
+    this.medMap.set('atropinaXranitidina', 'C');
+    this.medMap.set('atropinaXringer lactato', 'C');
+    this.medMap.set('atropinaXsuccinilcolina', 'C');
+    this.medMap.set('atropinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('atropinaXsulfato de magnésio', 'C');
+    this.medMap.set('atropinaXtiamina', 'C');
+    this.medMap.set('atropinaXtiopental', 'I');
+    this.medMap.set('atropinaXvancomicina', 'C');
+    this.medMap.set('atropinaXVASopressina', 'C');
+
+    this.medMap.set('azitromicinaXbicarbonato de sódio', 'C');
+    this.medMap.set('azitromicinaXceFAZolina', 'C');
+    this.medMap.set('azitromicinaXceFEPima', 'C');
+    this.medMap.set('azitromicinaXcefoTAXima', 'V');
+    this.medMap.set('azitromicinaXcefOXitina', 'C');
+    this.medMap.set('azitromicinaXcefTAZidima', 'V');
+    this.medMap.set('azitromicinaXcefTRIAXona', 'V');
+    this.medMap.set('azitromicinaXcefUROxima', 'V');
+    this.medMap.set('azitromicinaXclindamicina', 'V');
+    this.medMap.set('azitromicinaXcloreto de cálcio (reposição de cálcio)', 'C');
+    this.medMap.set('azitromicinaXcloreto de potássio', 'V');
+    this.medMap.set('azitromicinaXclorpromazina', 'I');
+    this.medMap.set('azitromicinaXdexametasona', 'C');
+    this.medMap.set('azitromicinaXdiazepam', 'I');
+    this.medMap.set('azitromicinaXDOBUTamina', 'C');
+    this.medMap.set('azitromicinaXDOPamina', 'C');
+    this.medMap.set('azitromicinaXdroperidol', 'C');
+    this.medMap.set('azitromicinaXesmolol', 'C');
+    this.medMap.set('azitromicinaXfenitoína', 'I');
+    this.medMap.set('azitromicinaXfenobarbital', 'C');
+    this.medMap.set('azitromicinaXfluconazol', 'C');
+    this.medMap.set('azitromicinaXfosfato de potássio', 'C');
+    this.medMap.set('azitromicinaXfurosemida', 'V');
+    this.medMap.set('azitromicinaXganciclovir', 'C');
+    this.medMap.set('azitromicinaXgentamicina', 'V');
+    this.medMap.set('azitromicinaXgluconato de cálcio', 'C');
+    this.medMap.set('azitromicinaXhaloperidol', 'C');
+    this.medMap.set('azitromicinaXheparina', 'C');
+    this.medMap.set('azitromicinaXhidrocortisona', 'C');
+    this.medMap.set('azitromicinaXimipenem-cilastatina', 'V');
+    this.medMap.set('azitromicinaXlidocaína', 'C');
+    this.medMap.set('azitromicinaXlinezolida', 'C');
+    this.medMap.set('azitromicinaXmanitol', 'C');
+    this.medMap.set('azitromicinaXmeropenem', 'C');
+    this.medMap.set('azitromicinaXmetilprednisolona', 'C');
+    this.medMap.set('azitromicinaXmetoclopramida', 'C');
+    this.medMap.set('azitromicinaXmetronidazol', 'C');
+    this.medMap.set('azitromicinaXmidazolam', 'I');
+    this.medMap.set('azitromicinaXmilrinona', 'C');
+    this.medMap.set('azitromicinaXnaloxona', 'C');
+    this.medMap.set('azitromicinaXnitroGLICERINA', 'C');
+    this.medMap.set('azitromicinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('azitromicinaXocitocina', 'C');
+    this.medMap.set('azitromicinaXoctreotida', 'C');
+    this.medMap.set('azitromicinaXondansetrona', 'C');
+    this.medMap.set('azitromicinaXpamidronato', 'C');
+    this.medMap.set('azitromicinaXpancurônio', 'C');
+    this.medMap.set('azitromicinaXpiperacilina-tazobactam', 'V');
+    this.medMap.set('azitromicinaXprometazina', 'C');
+    this.medMap.set('azitromicinaXranitidina', 'C');
+    this.medMap.set('azitromicinaXremifentanil', 'C');
+    this.medMap.set('azitromicinaXringer lactato', 'C');
+    this.medMap.set('azitromicinaXrocurônio', 'C');
+    this.medMap.set('azitromicinaXsuccinilcolina', 'C');
+    this.medMap.set('azitromicinaXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('azitromicinaXsulfato de magnésio', 'C');
+    this.medMap.set('azitromicinaXtigeciclina', 'C');
+    this.medMap.set('azitromicinaXtiopental', 'I');
+    this.medMap.set('azitromicinaXvancomicina', 'C');
+    this.medMap.set('azitromicinaXVASopressina', 'C');
+    this.medMap.set('azitromicinaXvoriconazol', 'C');
+    this.medMap.set('azitromicinaXzidovudina', 'C');
+
+    this.medMap.set('bicarbonato de sódioXceFAZolina', 'C');
+    this.medMap.set('bicarbonato de sódioXceFEPima', 'C');
+    this.medMap.set('bicarbonato de sódioXcefoTAXima', 'I');
+    this.medMap.set('bicarbonato de sódioXcefOXitina', 'I');
+    this.medMap.set('bicarbonato de sódioXcefTAZidima', 'C');
+    this.medMap.set('bicarbonato de sódioXcefTRIAXona', 'C');
+    this.medMap.set('bicarbonato de sódioXcefUROxima', 'I');
+    this.medMap.set('bicarbonato de sódioXcetamina', 'I');
+    this.medMap.set('bicarbonato de sódioXclindamicina', 'C');
+    this.medMap.set('bicarbonato de sódioXcloreto de cálcio', 'I');
+    this.medMap.set('bicarbonato de sódioXcloreto de potássio', 'C');
+    this.medMap.set('bicarbonato de sódioXclorpromazina', 'I');
+    this.medMap.set('bicarbonato de sódioXdantroleno', 'I');
+    this.medMap.set('bicarbonato de sódioXdexametasona', 'C');
+    this.medMap.set('bicarbonato de sódioXdiazepam', 'I');
+    this.medMap.set('bicarbonato de sódioXDOBUTamina', 'I');
+    this.medMap.set('bicarbonato de sódioXDOPamina', 'I');
+    this.medMap.set('bicarbonato de sódioXesmolol', 'C');
+    this.medMap.set('bicarbonato de sódioXfenitoína', 'I');
+    this.medMap.set('bicarbonato de sódioXfenobarbital', 'C');
+    this.medMap.set('bicarbonato de sódioXfentanil', 'C');
+    this.medMap.set('bicarbonato de sódioXfilgrastima', 'C');
+    this.medMap.set('bicarbonato de sódioXfitomenadiona', 'C');
+    this.medMap.set('bicarbonato de sódioXfluconazol', 'C');
+    this.medMap.set('bicarbonato de sódioXfurosemida', 'C');
+    this.medMap.set('bicarbonato de sódioXganciclovir', 'I');
+    this.medMap.set('bicarbonato de sódioXgentamicina', 'C');
+    this.medMap.set('bicarbonato de sódioXgluconato de cálcio', 'I');
+    this.medMap.set('bicarbonato de sódioXhaloperidol', 'I');
+    this.medMap.set('bicarbonato de sódioXheparina', 'C');
+    this.medMap.set('bicarbonato de sódioXhidralazina', 'V');
+    this.medMap.set('bicarbonato de sódioXhidrocortisona', 'C');
+    this.medMap.set('bicarbonato de sódioXimipenem-cilastatina', 'I');
+    this.medMap.set('bicarbonato de sódioXinsulina regular', 'C');
+    this.medMap.set('bicarbonato de sódioXlevofloxacino', 'C');
+    this.medMap.set('bicarbonato de sódioXlidocaína', 'C');
+    this.medMap.set('bicarbonato de sódioXlinezolida', 'C');
+    this.medMap.set('bicarbonato de sódioXmanitol', 'C');
+    this.medMap.set('bicarbonato de sódioXmetilprednisolona', 'C');
+    this.medMap.set('bicarbonato de sódioXmetoclopramida', 'C');
+    this.medMap.set('bicarbonato de sódioXmetoprolol', 'C');
+    this.medMap.set('bicarbonato de sódioXmetronidazol', 'C');
+    this.medMap.set('bicarbonato de sódioXmidazolam', 'I');
+    this.medMap.set('bicarbonato de sódioXmilrinona', 'C');
+    this.medMap.set('bicarbonato de sódioXmorfina', 'C');
+    this.medMap.set('bicarbonato de sódioXnaloxona', 'C');
+    this.medMap.set('bicarbonato de sódioXnitroGLICERINA', 'C');
+    this.medMap.set('bicarbonato de sódioXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('bicarbonato de sódioXnoradrenalina', 'I');
+    this.medMap.set('bicarbonato de sódioXocitocina', 'C');
+    this.medMap.set('bicarbonato de sódioXoctreotida', 'C');
+    this.medMap.set('bicarbonato de sódioXondansetrona', 'I');
+    this.medMap.set('bicarbonato de sódioXpamidronato', 'C');
+    this.medMap.set('bicarbonato de sódioXpancurônio', 'C');
+    this.medMap.set('bicarbonato de sódioXpenicilina G potássica', 'C');
+    this.medMap.set('bicarbonato de sódioXpiperacilina-tazobactam', 'C');
+    this.medMap.set('bicarbonato de sódioXpolimixina B', 'C');
+    this.medMap.set('bicarbonato de sódioXpolivitamínico', 'C');
+    this.medMap.set('bicarbonato de sódioXprometazina', 'I');
+    this.medMap.set('bicarbonato de sódioXpropofol', 'C');
+    this.medMap.set('bicarbonato de sódioXprotamina', 'C');
+    this.medMap.set('bicarbonato de sódioXranitidina', 'C');
+    this.medMap.set('bicarbonato de sódioXremifentanil', 'C');
+    this.medMap.set('bicarbonato de sódioXringer lactato', 'C');
+    this.medMap.set('bicarbonato de sódioXrocurônio', 'C');
+    this.medMap.set('bicarbonato de sódioXsuccinilcolina', 'I');
+    this.medMap.set('bicarbonato de sódioXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('bicarbonato de sódioXsulfato de magnésio', 'C');
+    this.medMap.set('bicarbonato de sódioXtiamina', 'I');
+    this.medMap.set('bicarbonato de sódioXtigeciclina', 'C');
+    this.medMap.set('bicarbonato de sódioXtiopental', 'I');
+    this.medMap.set('bicarbonato de sódioXtramadol', 'C');
+    this.medMap.set('bicarbonato de sódioXvancomicina', 'C');
+    this.medMap.set('bicarbonato de sódioXVASopressina', 'C');
+    this.medMap.set('bicarbonato de sódioXvoriconazol', 'C');
+
+    this.medMap.set('cefaLOTinaXceFAZolina', 'C');
+    this.medMap.set('cefaLOTinaXcefoTAXima', 'I');
+    this.medMap.set('cefaLOTinaXcefOXitina', 'C');
+    this.medMap.set('cefaLOTinaXcefTAZidima', 'C');
+    this.medMap.set('cefaLOTinaXcefTRIAXona', 'C');
+    this.medMap.set('cefaLOTinaXcefUROxima', 'C');
+    this.medMap.set('cefaLOTinaXclindamicina', 'C');
+    this.medMap.set('cefaLOTinaXcloreto de potássio', 'C');
+    this.medMap.set('cefaLOTinaXclorpromazina', 'I');
+    this.medMap.set('cefaLOTinaXdiazepam', 'I');
+    this.medMap.set('cefaLOTinaXDOBUTamina', 'I');
+    this.medMap.set('cefaLOTinaXDOPamina', 'V');
+    this.medMap.set('cefaLOTinaXfenitoína', 'I');
+    this.medMap.set('cefaLOTinaXfenobarbital', 'C');
+    this.medMap.set('cefaLOTinaXfentanil', 'C');
+    this.medMap.set('cefaLOTinaXfitomenadiona', 'C');
+    this.medMap.set('cefaLOTinaXfluconazol', 'C');
+    this.medMap.set('cefaLOTinaXfurosemida', 'C');
+    this.medMap.set('cefaLOTinaXgentamicina', 'C');
+    this.medMap.set('cefaLOTinaXhaloperidol', 'I');
+    this.medMap.set('cefaLOTinaXheparina', 'C');
+    this.medMap.set('cefaLOTinaXhidrocortisona', 'C');
+    this.medMap.set('cefaLOTinaXimipenem-cilastatina', 'C');
+    this.medMap.set('cefaLOTinaXinsulina regular', 'C');
+    this.medMap.set('cefaLOTinaXmetilprednisolona', 'C');
+    this.medMap.set('cefaLOTinaXmetoclopramida', 'C');
+    this.medMap.set('cefaLOTinaXmetoprolol', 'C');
+    this.medMap.set('cefaLOTinaXmidazolam', 'I');
+    this.medMap.set('cefaLOTinaXmorfina', 'C');
+    this.medMap.set('cefaLOTinaXnaloxona', 'C');
+    this.medMap.set('cefaLOTinaXnitroGLICERINA', 'C');
+    this.medMap.set('cefaLOTinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('cefaLOTinaXnoradrenalina', 'C');
+    this.medMap.set('cefaLOTinaXondansetrona', 'I');
+    this.medMap.set('cefaLOTinaXoxacilina', 'C');
+    this.medMap.set('cefaLOTinaXpenicilina G potássica', 'C');
+    this.medMap.set('cefaLOTinaXpolimixina B', 'I');
+    this.medMap.set('cefaLOTinaXprometazina', 'I');
+    this.medMap.set('cefaLOTinaXranitidina', 'C');
+    this.medMap.set('cefaLOTinaXringer lactato', 'C');
+    this.medMap.set('cefaLOTinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cefaLOTinaXsulfato de magnésio', 'C');
+    this.medMap.set('cefaLOTinaXvancomicina', 'C');
+    this.medMap.set('cefaLOTinaXvoriconazol', 'C');
+
+    this.medMap.set('ceFAZolinaXcefoTAXima', 'I');
+    this.medMap.set('ceFAZolinaXcefOXitina', 'C');
+    this.medMap.set('ceFAZolinaXcefTAZidima', 'C');
+    this.medMap.set('ceFAZolinaXcefTRIAXona', 'C');
+    this.medMap.set('ceFAZolinaXcefUROxima', 'C');
+    this.medMap.set('ceFAZolinaXcetamina', 'C');
+    this.medMap.set('ceFAZolinaXclindamicina', 'C');
+    this.medMap.set('ceFAZolinaXcloreto de cálcio (reposição de cálcio)', 'I');
+    this.medMap.set('ceFAZolinaXcloreto de potássio', 'C');
+    this.medMap.set('ceFAZolinaXclorpromazina', 'I');
+    this.medMap.set('ceFAZolinaXdantroleno', 'I');
+    this.medMap.set('ceFAZolinaXdexametasona', 'C');
+    this.medMap.set('ceFAZolinaXdiazepam', 'I');
+    this.medMap.set('ceFAZolinaXDOBUTamina', 'I');
+    this.medMap.set('ceFAZolinaXDOPamina', 'I');
+    this.medMap.set('ceFAZolinaXesmolol', 'C');
+    this.medMap.set('ceFAZolinaXfenitoína', 'I');
+    this.medMap.set('ceFAZolinaXfenobarbital', 'C');
+    this.medMap.set('ceFAZolinaXfentanil', 'C');
+    this.medMap.set('ceFAZolinaXfilgrastima', 'C');
+    this.medMap.set('ceFAZolinaXfitomenadiona', 'C');
+    this.medMap.set('ceFAZolinaXfluconazol', 'C');
+    this.medMap.set('ceFAZolinaXfurosemida', 'C');
+    this.medMap.set('ceFAZolinaXganciclovir', 'I');
+    this.medMap.set('ceFAZolinaXgentamicina', 'C');
+    this.medMap.set('ceFAZolinaXgluconato de cálcio', 'C');
+    this.medMap.set('ceFAZolinaXhaloperidol', 'I');
+    this.medMap.set('ceFAZolinaXheparina', 'C');
+    this.medMap.set('ceFAZolinaXhidralazina', 'I');
+    this.medMap.set('ceFAZolinaXhidrocortisona', 'C');
+    this.medMap.set('ceFAZolinaXimipenem-cilastatina', 'C');
+    this.medMap.set('ceFAZolinaXinsulina regular', 'C');
+    this.medMap.set('ceFAZolinaXlevofloxacino', 'I');
+    this.medMap.set('ceFAZolinaXlidocaína', 'C');
+    this.medMap.set('ceFAZolinaXlinezolida', 'C');
+    this.medMap.set('ceFAZolinaXmanitol', 'C');
+    this.medMap.set('ceFAZolinaXmetilprednisolona', 'C');
+    this.medMap.set('ceFAZolinaXmetoclopramida', 'C');
+    this.medMap.set('ceFAZolinaXmetoprolol', 'C');
+    this.medMap.set('ceFAZolinaXmetronidazol', 'C');
+    this.medMap.set('ceFAZolinaXmidazolam', 'C');
+    this.medMap.set('ceFAZolinaXmilrinona', 'C');
+    this.medMap.set('ceFAZolinaXmorfina', 'C');
+    this.medMap.set('ceFAZolinaXnitroGLICERINA', 'C');
+    this.medMap.set('ceFAZolinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('ceFAZolinaXnoradrenalina', 'C');
+    this.medMap.set('ceFAZolinaXocitocina', 'C');
+    this.medMap.set('ceFAZolinaXoctreotida', 'C');
+    this.medMap.set('ceFAZolinaXondansetrona', 'C');
+    this.medMap.set('ceFAZolinaXoxacilina', 'C');
+    this.medMap.set('ceFAZolinaXpamidronato', 'C');
+    this.medMap.set('ceFAZolinaXpancurônio', 'C');
+    this.medMap.set('ceFAZolinaXpenicilina G potássica', 'C');
+    this.medMap.set('ceFAZolinaXpolimixina B', 'C');
+    this.medMap.set('ceFAZolinaXpolivitamínico', 'C');
+    this.medMap.set('ceFAZolinaXprometazina', 'I');
+    this.medMap.set('ceFAZolinaXpropofol', 'C');
+    this.medMap.set('ceFAZolinaXprotamina', 'I');
+    this.medMap.set('ceFAZolinaXranitidina', 'C');
+    this.medMap.set('ceFAZolinaXremifentanil', 'C');
+    this.medMap.set('ceFAZolinaXringer lactato', 'C');
+    this.medMap.set('ceFAZolinaXsuccinilcolina', 'C');
+    this.medMap.set('ceFAZolinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ceFAZolinaXsulfato de magnésio', 'V');
+    this.medMap.set('ceFAZolinaXtiamina', 'C');
+    this.medMap.set('ceFAZolinaXtigeciclina', 'C');
+    this.medMap.set('ceFAZolinaXVASopressina', 'C');
+    this.medMap.set('ceFAZolinaXvitaminas do complexo B', 'C');
+    this.medMap.set('ceFAZolinaXvoriconazol', 'C');
+
+    this.medMap.set('ceFEPimaXcetamina', 'C');
+    this.medMap.set('ceFEPimaXciprofloxacino', 'I');
+    this.medMap.set('ceFEPimaXclindamicina', 'C');
+    this.medMap.set('ceFEPimaXcloreto de potássio', 'C');
+    this.medMap.set('ceFEPimaXclorpromazina', 'I');
+    this.medMap.set('ceFEPimaXdexametasona', 'C');
+    this.medMap.set('ceFEPimaXdiazepam', 'I');
+    this.medMap.set('ceFEPimaXDOBUTamina', 'I');
+    this.medMap.set('ceFEPimaXdroperidol', 'I');
+    this.medMap.set('ceFEPimaXfenitoína', 'I');
+    this.medMap.set('ceFEPimaXfilgrastima', 'I');
+    this.medMap.set('ceFEPimaXfluconazol', 'C');
+    this.medMap.set('ceFEPimaXfurosemida', 'C');
+    this.medMap.set('ceFEPimaXganciclovir', 'I');
+    this.medMap.set('ceFEPimaXgentamicina', 'C');
+    this.medMap.set('ceFEPimaXgluconato de cálcio', 'C');
+    this.medMap.set('ceFEPimaXhaloperidol', 'I');
+    this.medMap.set('ceFEPimaXheparina', 'C');
+    this.medMap.set('ceFEPimaXhidrocortisona', 'C');
+    this.medMap.set('ceFEPimaXimipenem-cilastatina', 'C');
+    this.medMap.set('ceFEPimaXinsulina regular', 'C');
+    this.medMap.set('ceFEPimaXlevofloxacino', 'C');
+    this.medMap.set('ceFEPimaXlinezolida', 'C');
+    this.medMap.set('ceFEPimaXmanitol', 'I');
+    this.medMap.set('ceFEPimaXmetilprednisolona', 'C');
+    this.medMap.set('ceFEPimaXmetoclopramida', 'I');
+    this.medMap.set('ceFEPimaXmetoprolol', 'C');
+    this.medMap.set('ceFEPimaXmetronidazol', 'C');
+    this.medMap.set('ceFEPimaXmidazolam', 'I');
+    this.medMap.set('ceFEPimaXmilrinona', 'C');
+    this.medMap.set('ceFEPimaXocitocina', 'C');
+    this.medMap.set('ceFEPimaXoctreotida', 'C');
+    this.medMap.set('ceFEPimaXondansetrona', 'I');
+    this.medMap.set('ceFEPimaXpamidronato', 'C');
+    this.medMap.set('ceFEPimaXpancurônio', 'C');
+    this.medMap.set('ceFEPimaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('ceFEPimaXprometazina', 'I');
+    this.medMap.set('ceFEPimaXpropofol', 'V');
+    this.medMap.set('ceFEPimaXranitidina', 'C');
+    this.medMap.set('ceFEPimaXremifentanil', 'C');
+    this.medMap.set('ceFEPimaXringer lactato', 'C');
+    this.medMap.set('ceFEPimaXrocurônio', 'C');
+    this.medMap.set('ceFEPimaXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('ceFEPimaXsulfato de magnésio', 'I');
+    this.medMap.set('ceFEPimaXtigeciclina', 'C');
+    this.medMap.set('ceFEPimaXVASopressina', 'C');
+    this.medMap.set('ceFEPimaXvoriconazol', 'I');
+    this.medMap.set('ceFEPimaXzidovudina', 'C');
+
+    this.medMap.set('cefoTAXimaXcefOXitina', 'C');
+    this.medMap.set('cefoTAXimaXcefTAZidima', 'I');
+    this.medMap.set('cefoTAXimaXcefTRIAXona', 'C');
+    this.medMap.set('cefoTAXimaXcefUROxima', 'C');
+    this.medMap.set('cefoTAXimaXcetamina', 'C');
+    this.medMap.set('cefoTAXimaXclindamicina', 'C');
+    this.medMap.set('cefoTAXimaXcloreto de cálcio', 'C');
+    this.medMap.set('cefoTAXimaXcloreto de potássio', 'C');
+    this.medMap.set('cefoTAXimaXclorpromazina', 'I');
+    this.medMap.set('cefoTAXimaXdantroleno', 'I');
+    this.medMap.set('cefoTAXimaXdexametasona', 'C');
+    this.medMap.set('cefoTAXimaXdiazepam', 'I');
+    this.medMap.set('cefoTAXimaXDOBUTamina', 'I');
+    this.medMap.set('cefoTAXimaXDOPamina', 'C');
+    this.medMap.set('cefoTAXimaXesmolol', 'C');
+    this.medMap.set('cefoTAXimaXfenitoína', 'I');
+    this.medMap.set('cefoTAXimaXfenobarbital', 'I');
+    this.medMap.set('cefoTAXimaXfentanil', 'C');
+    this.medMap.set('cefoTAXimaXfilgrastima', 'I');
+    this.medMap.set('cefoTAXimaXfitomenadiona', 'C');
+    this.medMap.set('cefoTAXimaXfurosemida', 'C');
+    this.medMap.set('cefoTAXimaXganciclovir', 'I');
+    this.medMap.set('cefoTAXimaXgentamicina', 'C');
+    this.medMap.set('cefoTAXimaXgluconato de cálcio', 'C');
+    this.medMap.set('cefoTAXimaXhaloperidol', 'I');
+    this.medMap.set('cefoTAXimaXheparina', 'C');
+    this.medMap.set('cefoTAXimaXhidralazina', 'I');
+    this.medMap.set('cefoTAXimaXhidrocortisona', 'C');
+    this.medMap.set('cefoTAXimaXimipenem-cilastatina', 'C');
+    this.medMap.set('cefoTAXimaXinsulina regular', 'C');
+    this.medMap.set('cefoTAXimaXlidocaína', 'C');
+    this.medMap.set('cefoTAXimaXlinezolida', 'C');
+    this.medMap.set('cefoTAXimaXmanitol', 'C');
+    this.medMap.set('cefoTAXimaXmetilprednisolona', 'I');
+    this.medMap.set('cefoTAXimaXmetoclopramida', 'C');
+    this.medMap.set('cefoTAXimaXmetoprolol', 'C');
+    this.medMap.set('cefoTAXimaXmetronidazol', 'C');
+    this.medMap.set('cefoTAXimaXmidazolam', 'C');
+    this.medMap.set('cefoTAXimaXmilrinona', 'C');
+    this.medMap.set('cefoTAXimaXmorfina', 'C');
+    this.medMap.set('cefoTAXimaXnaloxona', 'C');
+    this.medMap.set('cefoTAXimaXnitroGLICERINA', 'C');
+    this.medMap.set('cefoTAXimaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('cefoTAXimaXnoradrenalina', 'C');
+    this.medMap.set('cefoTAXimaXocitocina', 'C');
+    this.medMap.set('cefoTAXimaXoctreotida', 'C');
+    this.medMap.set('cefoTAXimaXondansetrona', 'C');
+    this.medMap.set('cefoTAXimaXoxacilina', 'C');
+    this.medMap.set('cefoTAXimaXpamidronato', 'C');
+    this.medMap.set('cefoTAXimaXpancurônio', 'C');
+    this.medMap.set('cefoTAXimaXpenicilina G potássica', 'C');
+    this.medMap.set('cefoTAXimaXpolimixina B', 'C');
+    this.medMap.set('cefoTAXimaXpolivitamínico', 'C');
+    this.medMap.set('cefoTAXimaXprometazina', 'I');
+    this.medMap.set('cefoTAXimaXpropofol', 'C');
+    this.medMap.set('cefoTAXimaXprotamina', 'I');
+    this.medMap.set('cefoTAXimaXranitidina', 'C');
+    this.medMap.set('cefoTAXimaXremifentanil', 'C');
+    this.medMap.set('cefoTAXimaXringer lactato', 'C');
+    this.medMap.set('cefoTAXimaXrocurônio', 'C');
+    this.medMap.set('cefoTAXimaXsuccinilcolina', 'C');
+    this.medMap.set('cefoTAXimaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cefoTAXimaXsulfato de magnésio', 'C');
+    this.medMap.set('cefoTAXimaXtiamina', 'C');
+    this.medMap.set('cefoTAXimaXtigeciclina', 'C');
+    this.medMap.set('cefoTAXimaXvancomicina', 'V');
+    this.medMap.set('cefoTAXimaXVASopressina', 'C');
+    this.medMap.set('cefoTAXimaXvoriconazol', 'C');
+
+    this.medMap.set('cefOXitinaXcefTAZidima', 'C');
+    this.medMap.set('cefOXitinaXcefTRIAXona', 'C');
+    this.medMap.set('cefOXitinaXcefUROxima', 'C');
+    this.medMap.set('cefOXitinaXclindamicina', 'C');
+    this.medMap.set('cefOXitinaXcloreto de cálcio (reposição de cálcio)', 'C');
+    this.medMap.set('cefOXitinaXcloreto de potássio', 'C');
+    this.medMap.set('cefOXitinaXclorpromazina', 'I');
+    this.medMap.set('cefOXitinaXdantroleno', 'I');
+    this.medMap.set('cefOXitinaXdexametasona', 'C');
+    this.medMap.set('cefOXitinaXdiazepam', 'I');
+    this.medMap.set('cefOXitinaXDOBUTamina', 'I');
+    this.medMap.set('cefOXitinaXDOPamina', 'C');
+    this.medMap.set('cefOXitinaXesmolol', 'C');
+    this.medMap.set('cefOXitinaXfenitoína', 'I');
+    this.medMap.set('cefOXitinaXfenobarbital', 'I');
+    this.medMap.set('cefOXitinaXfentanil', 'C');
+    this.medMap.set('cefOXitinaXfilgrastima', 'I');
+    this.medMap.set('cefOXitinaXfitomenadiona', 'C');
+    this.medMap.set('cefOXitinaXfluconazol', 'C');
+    this.medMap.set('cefOXitinaXfurosemida', 'C');
+    this.medMap.set('cefOXitinaXganciclovir', 'I');
+    this.medMap.set('cefOXitinaXgentamicina', 'C');
+    this.medMap.set('cefOXitinaXgluconato de cálcio', 'C');
+    this.medMap.set('cefOXitinaXhaloperidol', 'I');
+    this.medMap.set('cefOXitinaXheparina', 'C');
+    this.medMap.set('cefOXitinaXhidralazina', 'I');
+    this.medMap.set('cefOXitinaXhidrocortisona', 'C');
+    this.medMap.set('cefOXitinaXimipenem-cilastatina', 'C');
+    this.medMap.set('cefOXitinaXinsulina regular', 'I');
+    this.medMap.set('cefOXitinaXlevofloxacino', 'I');
+    this.medMap.set('cefOXitinaXlidocaína', 'C');
+    this.medMap.set('cefOXitinaXlinezolida', 'C');
+    this.medMap.set('cefOXitinaXmanitol', 'C');
+    this.medMap.set('cefOXitinaXmetilprednisolona', 'I');
+    this.medMap.set('cefOXitinaXmetoclopramida', 'C');
+    this.medMap.set('cefOXitinaXmetoprolol', 'C');
+    this.medMap.set('cefOXitinaXmetronidazol', 'C');
+    this.medMap.set('cefOXitinaXmidazolam', 'C');
+    this.medMap.set('cefOXitinaXmilrinona', 'C');
+    this.medMap.set('cefOXitinaXmorfina', 'C');
+    this.medMap.set('cefOXitinaXnaloxona', 'C');
+    this.medMap.set('cefOXitinaXnitroGLICERINA', 'C');
+    this.medMap.set('cefOXitinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('cefOXitinaXnoradrenalina', 'C');
+    this.medMap.set('cefOXitinaXocitocina', 'C');
+    this.medMap.set('cefOXitinaXoctreotida', 'C');
+    this.medMap.set('cefOXitinaXondansetrona', 'C');
+    this.medMap.set('cefOXitinaXoxacilina', 'C');
+    this.medMap.set('cefOXitinaXpamidronato', 'C');
+    this.medMap.set('cefOXitinaXpancurônio', 'C');
+    this.medMap.set('cefOXitinaXpenicilina G potássica', 'C');
+    this.medMap.set('cefOXitinaXpolimixina B', 'I');
+    this.medMap.set('cefOXitinaXpolivitamínico', 'C');
+    this.medMap.set('cefOXitinaXprometazina', 'I');
+    this.medMap.set('cefOXitinaXpropofol', 'C');
+    this.medMap.set('cefOXitinaXprotamina', 'I');
+    this.medMap.set('cefOXitinaXranitidina', 'C');
+    this.medMap.set('cefOXitinaXremifentanil', 'C');
+    this.medMap.set('cefOXitinaXringer lactato', 'C');
+    this.medMap.set('cefOXitinaXrocurônio', 'C');
+    this.medMap.set('cefOXitinaXsuccinilcolina', 'C');
+    this.medMap.set('cefOXitinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cefOXitinaXsulfato de magnésio', 'C');
+    this.medMap.set('cefOXitinaXtiamina', 'C');
+    this.medMap.set('cefOXitinaXtigeciclina', 'C');
+    this.medMap.set('cefOXitinaXvancomicina', 'V');
+    this.medMap.set('cefOXitinaXVASopressina', 'C');
+    this.medMap.set('cefOXitinaXvoriconazol', 'C');
+
+    this.medMap.set('cefTAZidimaXcefTRIAXona', 'C');
+    this.medMap.set('cefTAZidimaXcefUROxima', 'C');
+    this.medMap.set('cefTAZidimaXcetamina', 'C');
+    this.medMap.set('cefTAZidimaXciprofloxacino', 'C');
+    this.medMap.set('cefTAZidimaXclindamicina', 'C');
+    this.medMap.set('cefTAZidimaXcloreto de cálcio (reposição de cálcio)', 'I');
+    this.medMap.set('cefTAZidimaXcloreto de potássio', 'C');
+    this.medMap.set('cefTAZidimaXclorpromazina', 'I');
+    this.medMap.set('cefTAZidimaXdantroleno', 'I');
+    this.medMap.set('cefTAZidimaXdexametasona', 'C');
+    this.medMap.set('cefTAZidimaXdiazepam', 'I');
+    this.medMap.set('cefTAZidimaXDOPamina', 'C');
+    this.medMap.set('cefTAZidimaXesmolol', 'C');
+    this.medMap.set('cefTAZidimaXfenitoína', 'I');
+    this.medMap.set('cefTAZidimaXfenobarbital', 'C');
+    this.medMap.set('cefTAZidimaXfentanil', 'C');
+    this.medMap.set('cefTAZidimaXfilgrastima', 'C');
+    this.medMap.set('cefTAZidimaXfitomenadiona', 'C');
+    this.medMap.set('cefTAZidimaXfurosemida', 'C');
+    this.medMap.set('cefTAZidimaXganciclovir', 'I');
+    this.medMap.set('cefTAZidimaXgentamicina', 'C');
+    this.medMap.set('cefTAZidimaXgluconato de cálcio', 'C');
+    this.medMap.set('cefTAZidimaXhaloperidol', 'I');
+    this.medMap.set('cefTAZidimaXheparina', 'C');
+    this.medMap.set('cefTAZidimaXhidralazina', 'I');
+    this.medMap.set('cefTAZidimaXhidrocortisona', 'C');
+    this.medMap.set('cefTAZidimaXimipenem-cilastatina', 'C');
+    this.medMap.set('cefTAZidimaXinsulina regular', 'C');
+    this.medMap.set('cefTAZidimaXlevofloxacino', 'C');
+    this.medMap.set('cefTAZidimaXlidocaína', 'C');
+    this.medMap.set('cefTAZidimaXlinezolida', 'C');
+    this.medMap.set('cefTAZidimaXmanitol', 'C');
+    this.medMap.set('cefTAZidimaXmetilprednisolona', 'C');
+    this.medMap.set('cefTAZidimaXmetoclopramida', 'C');
+    this.medMap.set('cefTAZidimaXmetoprolol', 'C');
+    this.medMap.set('cefTAZidimaXmetronidazol', 'C');
+    this.medMap.set('cefTAZidimaXmidazolam', 'I');
+    this.medMap.set('cefTAZidimaXmilrinona', 'C');
+    this.medMap.set('cefTAZidimaXmorfina', 'C');
+    this.medMap.set('cefTAZidimaXnaloxona', 'C');
+    this.medMap.set('cefTAZidimaXnitroGLICERINA', 'C');
+    this.medMap.set('cefTAZidimaXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('cefTAZidimaXnoradrenalina', 'C');
+    this.medMap.set('cefTAZidimaXocitocina', 'C');
+    this.medMap.set('cefTAZidimaXoctreotida', 'C');
+    this.medMap.set('cefTAZidimaXoxacilina', 'C');
+    this.medMap.set('cefTAZidimaXpamidronato', 'C');
+    this.medMap.set('cefTAZidimaXpancurônio', 'C');
+    this.medMap.set('cefTAZidimaXpenicilina G potássica', 'C');
+    this.medMap.set('cefTAZidimaXpolimixina B', 'C');
+    this.medMap.set('cefTAZidimaXpolivitamínico', 'C');
+    this.medMap.set('cefTAZidimaXprometazina', 'I');
+    this.medMap.set('cefTAZidimaXpropofol', 'V');
+    this.medMap.set('cefTAZidimaXprotamina', 'I');
+    this.medMap.set('cefTAZidimaXranitidina', 'C');
+    this.medMap.set('cefTAZidimaXremifentanil', 'C');
+    this.medMap.set('cefTAZidimaXringer lactato', 'C');
+    this.medMap.set('cefTAZidimaXrocurônio', 'C');
+    this.medMap.set('cefTAZidimaXsuccinilcolina', 'C');
+    this.medMap.set('cefTAZidimaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cefTAZidimaXsulfato de magnésio', 'C');
+    this.medMap.set('cefTAZidimaXtiamina', 'I');
+    this.medMap.set('cefTAZidimaXtigeciclina', 'C');
+    this.medMap.set('cefTAZidimaXVASopressina', 'C');
+    this.medMap.set('cefTAZidimaXvoriconazol', 'C');
+    this.medMap.set('cefTAZidimaXzidovudina', 'C');
+
+    this.medMap.set('cefTRIAXonaXcefUROxima', 'C');
+    this.medMap.set('cefTRIAXonaXclindamicina', 'I');
+    this.medMap.set('cefTRIAXonaXcloreto de cálcio (reposição de cálcio)', 'I');
+    this.medMap.set('cefTRIAXonaXcloreto de potássio', 'C');
+    this.medMap.set('cefTRIAXonaXclorpromazina', 'I');
+    this.medMap.set('cefTRIAXonaXdantroleno', 'I');
+    this.medMap.set('cefTRIAXonaXdexametasona', 'C');
+    this.medMap.set('cefTRIAXonaXdiazepam', 'I');
+    this.medMap.set('cefTRIAXonaXDOBUTamina', 'I');
+    this.medMap.set('cefTRIAXonaXDOPamina', 'C');
+    this.medMap.set('cefTRIAXonaXesmolol', 'C');
+    this.medMap.set('cefTRIAXonaXfenitoína', 'I');
+    this.medMap.set('cefTRIAXonaXfenobarbital', 'C');
+    this.medMap.set('cefTRIAXonaXfentanil', 'C');
+    this.medMap.set('cefTRIAXonaXfilgrastima', 'I');
+    this.medMap.set('cefTRIAXonaXfitomenadiona', 'C');
+    this.medMap.set('cefTRIAXonaXfurosemida', 'C');
+    this.medMap.set('cefTRIAXonaXganciclovir', 'I');
+    this.medMap.set('cefTRIAXonaXgentamicina', 'C');
+    this.medMap.set('cefTRIAXonaXgluconato de cálcio', 'I');
+    this.medMap.set('cefTRIAXonaXhaloperidol', 'I');
+    this.medMap.set('cefTRIAXonaXheparina', 'C');
+    this.medMap.set('cefTRIAXonaXhidralazina', 'I');
+    this.medMap.set('cefTRIAXonaXhidrocortisona', 'C');
+    this.medMap.set('cefTRIAXonaXimipenem-cilastatina', 'I');
+    this.medMap.set('cefTRIAXonaXinsulina regular', 'C');
+    this.medMap.set('cefTRIAXonaXlevofloxacino', 'C');
+    this.medMap.set('cefTRIAXonaXlidocaína', 'C');
+    this.medMap.set('cefTRIAXonaXlinezolida', 'C');
+    this.medMap.set('cefTRIAXonaXmanitol', 'C');
+    this.medMap.set('cefTRIAXonaXmetilprednisolona', 'C');
+    this.medMap.set('cefTRIAXonaXmetoclopramida', 'C');
+    this.medMap.set('cefTRIAXonaXmetoprolol', 'C');
+    this.medMap.set('cefTRIAXonaXmetronidazol', 'C');
+    this.medMap.set('cefTRIAXonaXmidazolam', 'C');
+    this.medMap.set('cefTRIAXonaXmilrinona', 'C');
+    this.medMap.set('cefTRIAXonaXmorfina', 'C');
+    this.medMap.set('cefTRIAXonaXnaloxona', 'C');
+    this.medMap.set('cefTRIAXonaXnitroGLICERINA', 'C');
+    this.medMap.set('cefTRIAXonaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('cefTRIAXonaXnoradrenalina', 'C');
+    this.medMap.set('cefTRIAXonaXocitocina', 'C');
+    this.medMap.set('cefTRIAXonaXoctreotida', 'C');
+    this.medMap.set('cefTRIAXonaXoxacilina', 'C');
+    this.medMap.set('cefTRIAXonaXpamidronato', 'C');
+    this.medMap.set('cefTRIAXonaXpancurônio', 'C');
+    this.medMap.set('cefTRIAXonaXpenicilina G potássica', 'C');
+    this.medMap.set('cefTRIAXonaXpolimixina B', 'C');
+    this.medMap.set('cefTRIAXonaXpolivitamínico', 'C');
+    this.medMap.set('cefTRIAXonaXprometazina', 'I');
+    this.medMap.set('cefTRIAXonaXpropofol', 'C');
+    this.medMap.set('cefTRIAXonaXprotamina', 'I');
+    this.medMap.set('cefTRIAXonaXranitidina', 'C');
+    this.medMap.set('cefTRIAXonaXremifentanil', 'C');
+    this.medMap.set('cefTRIAXonaXringer lactato', 'I');
+    this.medMap.set('cefTRIAXonaXrocurônio', 'C');
+    this.medMap.set('cefTRIAXonaXsuccinilcolina', 'C');
+    this.medMap.set('cefTRIAXonaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cefTRIAXonaXtiamina', 'C');
+    this.medMap.set('cefTRIAXonaXtigeciclina', 'C');
+    this.medMap.set('cefTRIAXonaXVASopressina', 'C');
+    this.medMap.set('cefTRIAXonaXvoriconazol', 'C');
+    this.medMap.set('cefTRIAXonaXzidovudina', 'C');
+
+    this.medMap.set('cefUROximaXcetamina', 'C');
+    this.medMap.set('cefUROximaXclindamicina', 'C');
+    this.medMap.set('cefUROximaXcloreto de cálcio', 'I');
+    this.medMap.set('cefUROximaXcloreto de potássio', 'C');
+    this.medMap.set('cefUROximaXclorpromazina', 'I');
+    this.medMap.set('cefUROximaXdantroleno', 'I');
+    this.medMap.set('cefUROximaXdexametasona', 'I');
+    this.medMap.set('cefUROximaXdiazepam', 'I');
+    this.medMap.set('cefUROximaXDOBUTamina', 'I');
+    this.medMap.set('cefUROximaXDOPamina', 'C');
+    this.medMap.set('cefUROximaXesmolol', 'C');
+    this.medMap.set('cefUROximaXfenitoína', 'I');
+    this.medMap.set('cefUROximaXfenobarbital', 'I');
+    this.medMap.set('cefUROximaXfentanil', 'C');
+    this.medMap.set('cefUROximaXfilgrastima', 'I');
+    this.medMap.set('cefUROximaXfitomenadiona', 'C');
+    this.medMap.set('cefUROximaXfurosemida', 'C');
+    this.medMap.set('cefUROximaXganciclovir', 'I');
+    this.medMap.set('cefUROximaXgentamicina', 'C');
+    this.medMap.set('cefUROximaXgluconato de cálcio', 'C');
+    this.medMap.set('cefUROximaXhaloperidol', 'I');
+    this.medMap.set('cefUROximaXheparina', 'C');
+    this.medMap.set('cefUROximaXhidralazina', 'I');
+    this.medMap.set('cefUROximaXhidrocortisona', 'C');
+    this.medMap.set('cefUROximaXimipenem-cilastatina', 'C');
+    this.medMap.set('cefUROximaXinsulina regular', 'C');
+    this.medMap.set('cefUROximaXlevofloxacino', 'C');
+    this.medMap.set('cefUROximaXlidocaína', 'C');
+    this.medMap.set('cefUROximaXlinezolida', 'C');
+    this.medMap.set('cefUROximaXmanitol', 'C');
+    this.medMap.set('cefUROximaXmetilprednisolona', 'C');
+    this.medMap.set('cefUROximaXmetoclopramida', 'C');
+    this.medMap.set('cefUROximaXmetoprolol', 'C');
+    this.medMap.set('cefUROximaXmetronidazol', 'C');
+    this.medMap.set('cefUROximaXmidazolam', 'I');
+    this.medMap.set('cefUROximaXmilrinona', 'C');
+    this.medMap.set('cefUROximaXmorfina', 'C');
+    this.medMap.set('cefUROximaXnaloxona', 'C');
+    this.medMap.set('cefUROximaXnitroGLICERINA', 'C');
+    this.medMap.set('cefUROximaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('cefUROximaXnoradrenalina', 'C');
+    this.medMap.set('cefUROximaXocitocina', 'C');
+    this.medMap.set('cefUROximaXoctreotida', 'C');
+    this.medMap.set('cefUROximaXondansetrona', 'C');
+    this.medMap.set('cefUROximaXoxacilina', 'C');
+    this.medMap.set('cefUROximaXpamidronato', 'C');
+    this.medMap.set('cefUROximaXpancurônio', 'C');
+    this.medMap.set('cefUROximaXpenicilina G potássica', 'C');
+    this.medMap.set('cefUROximaXpolimixina B', 'I');
+    this.medMap.set('cefUROximaXpolivitamínico', 'C');
+    this.medMap.set('cefUROximaXprometazina', 'I');
+    this.medMap.set('cefUROximaXpropofol', 'C');
+    this.medMap.set('cefUROximaXprotamina', 'I');
+    this.medMap.set('cefUROximaXranitidina', 'C');
+    this.medMap.set('cefUROximaXremifentanil', 'C');
+    this.medMap.set('cefUROximaXringer lactato', 'C');
+    this.medMap.set('cefUROximaXrocurônio', 'C');
+    this.medMap.set('cefUROximaXsuccinilcolina', 'C');
+    this.medMap.set('cefUROximaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cefUROximaXsulfato de magnésio', 'I');
+    this.medMap.set('cefUROximaXtiamina', 'C');
+    this.medMap.set('cefUROximaXtigeciclina', 'C');
+    this.medMap.set('cefUROximaXVASopressina', 'C');
+    this.medMap.set('cefUROximaXvoriconazol', 'C');
+
+
+    this.medMap.set('cetaminaXcetoprofeno', 'C');
+    this.medMap.set('cetaminaXclindamicina', 'C');
+    this.medMap.set('cetaminaXclonidina', 'C');
+    this.medMap.set('cetaminaXcloreto de potássio', 'C');
+    this.medMap.set('cetaminaXclorpromazina', 'C');
+    this.medMap.set('cetaminaXdiazepam', 'C');
+    this.medMap.set('cetaminaXDOBUTamina', 'C');
+    this.medMap.set('cetaminaXDOPamina', 'C');
+    this.medMap.set('cetaminaXdroperidol', 'C');
+    this.medMap.set('cetaminaXfenitoína', 'I');
+    this.medMap.set('cetaminaXfentanil', 'C');
+    this.medMap.set('cetaminaXfosfato de potássio', 'I');
+    this.medMap.set('cetaminaXfurosemida', 'I');
+    this.medMap.set('cetaminaXgentamicina', 'C');
+    this.medMap.set('cetaminaXgluconato de cálcio', 'C');
+    this.medMap.set('cetaminaXhaloperidol', 'C');
+    this.medMap.set('cetaminaXheparina', 'I');
+    this.medMap.set('cetaminaXhidrocortisona', 'C');
+    this.medMap.set('cetaminaXinsulina regular', 'I');
+    this.medMap.set('cetaminaXlidocaína', 'C');
+    this.medMap.set('cetaminaXmeropenem', 'I');
+    this.medMap.set('cetaminaXmetoclopramida', 'C');
+    this.medMap.set('cetaminaXmetronidazol', 'C');
+    this.medMap.set('cetaminaXmidazolam', 'C');
+    this.medMap.set('cetaminaXmilrinona', 'C');
+    this.medMap.set('cetaminaXmorfina', 'C');
+    this.medMap.set('cetaminaXnaloxona', 'C');
+    this.medMap.set('cetaminaXocitocina', 'C');
+    this.medMap.set('cetaminaXpancurônio', 'C');
+    this.medMap.set('cetaminaXpenicilina G potássica', 'C');
+    this.medMap.set('cetaminaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('cetaminaXpolivitamínico', 'C');
+    this.medMap.set('cetaminaXprometazina', 'C');
+    this.medMap.set('cetaminaXpropofol', 'C');
+    this.medMap.set('cetaminaXranitidina', 'C');
+    this.medMap.set('cetaminaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cetaminaXsulfato de magnésio', 'C');
+    this.medMap.set('cetaminaXtramadol', 'C');
+    this.medMap.set('cetaminaXvancomicina', 'C');
+
+    this.medMap.set('cetoprofenoXtramadol', 'C');
+
+    this.medMap.set('ciprofloxacinoXcloreto de potássio', 'C');
+    this.medMap.set('ciprofloxacinoXdexametasona', 'I');
+    this.medMap.set('ciprofloxacinoXDOBUTamina', 'C');
+    this.medMap.set('ciprofloxacinoXDOPamina', 'C');
+    this.medMap.set('ciprofloxacinoXesmolol', 'I');
+    this.medMap.set('ciprofloxacinoXfenitoína', 'I');
+    this.medMap.set('ciprofloxacinoXfluconazol', 'C');
+    this.medMap.set('ciprofloxacinoXfosfato de potássio', 'I');
+    this.medMap.set('ciprofloxacinoXfurosemida', 'I');
+    this.medMap.set('ciprofloxacinoXgentamicina', 'C');
+    this.medMap.set('ciprofloxacinoXgluconato de cálcio', 'C');
+    this.medMap.set('ciprofloxacinoXheparina', 'I');
+    this.medMap.set('ciprofloxacinoXhidrocortisona', 'I');
+    this.medMap.set('ciprofloxacinoXlidocaína', 'C');
+    this.medMap.set('ciprofloxacinoXlinezolida', 'C');
+    this.medMap.set('ciprofloxacinoXmeropenem', 'I');
+    this.medMap.set('ciprofloxacinoXmetilprednisolona', 'I');
+    this.medMap.set('ciprofloxacinoXmetoclopramida', 'C');
+    this.medMap.set('ciprofloxacinoXmetronidazol', 'C');
+    this.medMap.set('ciprofloxacinoXmidazolam', 'C');
+    this.medMap.set('ciprofloxacinoXmilrinona', 'C');
+    this.medMap.set('ciprofloxacinoXnaloxona', 'C');
+    this.medMap.set('ciprofloxacinoXnoradrenalina', 'C');
+    this.medMap.set('ciprofloxacinoXocitocina', 'C');
+    this.medMap.set('ciprofloxacinoXoctreotida', 'C');
+    this.medMap.set('ciprofloxacinoXondansetrona', 'C');
+    this.medMap.set('ciprofloxacinoXpamidronato', 'C');
+    this.medMap.set('ciprofloxacinoXpancurônio', 'C');
+    this.medMap.set('ciprofloxacinoXpiperacilina-tazobactam', 'I');
+    this.medMap.set('ciprofloxacinoXprometazina', 'C');
+    this.medMap.set('ciprofloxacinoXpropofol', 'I');
+    this.medMap.set('ciprofloxacinoXranitidina', 'C');
+    this.medMap.set('ciprofloxacinoXremifentanil', 'C');
+    this.medMap.set('ciprofloxacinoXringer lactato', 'C');
+    this.medMap.set('ciprofloxacinoXrocurônio', 'C');
+    this.medMap.set('ciprofloxacinoXsulfato de magnésio', 'I');
+    this.medMap.set('ciprofloxacinoXtigeciclina', 'C');
+    this.medMap.set('ciprofloxacinoXvancomicina', 'C');
+    this.medMap.set('ciprofloxacinoXVASopressina', 'C');
+    this.medMap.set('ciprofloxacinoXvitaminas do complexo B', 'C');
+    this.medMap.set('ciprofloxacinoXvoriconazol', 'C');
+
+    this.medMap.set('clindamicinaXcloreto de cálcio', 'C');
+    this.medMap.set('clindamicinaXcloreto de potássio', 'C');
+    this.medMap.set('clindamicinaXclorpromazina', 'I');
+    this.medMap.set('clindamicinaXdantroleno', 'I');
+    this.medMap.set('clindamicinaXdexametasona', 'C');
+    this.medMap.set('clindamicinaXdiazepam', 'I');
+    this.medMap.set('clindamicinaXDOBUTamina', 'C');
+    this.medMap.set('clindamicinaXDOPamina', 'C');
+    this.medMap.set('clindamicinaXesmolol', 'C');
+    this.medMap.set('clindamicinaXfenitoína', 'I');
+    this.medMap.set('clindamicinaXfenobarbital', 'C');
+    this.medMap.set('clindamicinaXfentanil', 'C');
+    this.medMap.set('clindamicinaXfilgrastima', 'I');
+    this.medMap.set('clindamicinaXfitomenadiona', 'C');
+    this.medMap.set('clindamicinaXfluconazol', 'V');
+    this.medMap.set('clindamicinaXfurosemida', 'C');
+    this.medMap.set('clindamicinaXganciclovir', 'I');
+    this.medMap.set('clindamicinaXgentamicina', 'C');
+    this.medMap.set('clindamicinaXgluconato de cálcio', 'C');
+    this.medMap.set('clindamicinaXhaloperidol', 'I');
+    this.medMap.set('clindamicinaXheparina', 'C');
+    this.medMap.set('clindamicinaXhidrocortisona', 'C');
+    this.medMap.set('clindamicinaXimipenem-cilastatina', 'C');
+    this.medMap.set('clindamicinaXinsulina regular', 'C');
+    this.medMap.set('clindamicinaXlevofloxacino', 'C');
+    this.medMap.set('clindamicinaXlidocaína', 'C');
+    this.medMap.set('clindamicinaXlinezolida', 'C');
+    this.medMap.set('clindamicinaXmanitol', 'C');
+    this.medMap.set('clindamicinaXmetilprednisolona', 'C');
+    this.medMap.set('clindamicinaXmetoclopramida', 'C');
+    this.medMap.set('clindamicinaXmetoprolol', 'C');
+    this.medMap.set('clindamicinaXmetronidazol', 'C');
+    this.medMap.set('clindamicinaXmidazolam', 'V');
+    this.medMap.set('clindamicinaXmilrinona', 'C');
+    this.medMap.set('clindamicinaXmorfina', 'C');
+    this.medMap.set('clindamicinaXnaloxona', 'C');
+    this.medMap.set('clindamicinaXnitroGLICERINA', 'C');
+    this.medMap.set('clindamicinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('clindamicinaXnoradrenalina', 'C');
+    this.medMap.set('clindamicinaXocitocina', 'C');
+    this.medMap.set('clindamicinaXoctreotida', 'C');
+    this.medMap.set('clindamicinaXondansetrona', 'C');
+    this.medMap.set('clindamicinaXoxacilina', 'C');
+    this.medMap.set('clindamicinaXpamidronato', 'C');
+    this.medMap.set('clindamicinaXpancurônio', 'C');
+    this.medMap.set('clindamicinaXpenicilina G potássica', 'C');
+    this.medMap.set('clindamicinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('clindamicinaXpolivitamínico', 'C');
+    this.medMap.set('clindamicinaXprometazina', 'I');
+    this.medMap.set('clindamicinaXpropofol', 'C');
+    this.medMap.set('clindamicinaXprotamina', 'C');
+    this.medMap.set('clindamicinaXranitidina', 'C');
+    this.medMap.set('clindamicinaXremifentanil', 'C');
+    this.medMap.set('clindamicinaXringer lactato', 'C');
+    this.medMap.set('clindamicinaXrocurônio', 'C');
+    this.medMap.set('clindamicinaXsuccinilcolina', 'C');
+    this.medMap.set('clindamicinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('clindamicinaXsulfato de magnésio', 'C');
+    this.medMap.set('clindamicinaXtiamina', 'C');
+    this.medMap.set('clindamicinaXtigeciclina', 'C');
+    this.medMap.set('clindamicinaXvancomicina', 'C');
+    this.medMap.set('clindamicinaXVASopressina', 'C');
+    this.medMap.set('clindamicinaXvoriconazol', 'C');
+    this.medMap.set('clindamicinaXzidovudina', 'C');
+
+    this.medMap.set('clonidinaXcloreto de potássio', 'C');
+    this.medMap.set('clonidinaXDOBUTamina', 'C');
+    this.medMap.set('clonidinaXDOPamina', 'C');
+    this.medMap.set('clonidinaXfentanil', 'C');
+    this.medMap.set('clonidinaXhaloperidol', 'C');
+    this.medMap.set('clonidinaXheparina', 'C');
+    this.medMap.set('clonidinaXlidocaína', 'C');
+    this.medMap.set('clonidinaXmidazolam', 'V');
+    this.medMap.set('clonidinaXmorfina', 'C');
+    this.medMap.set('clonidinaXnitroGLICERINA', 'C');
+    this.medMap.set('clonidinaXnoradrenalina', 'C');
+    this.medMap.set('clonidinaXsulfato de magnésio', 'C');
+
+    this.medMap.set('cloreto de cálcioXcloreto de potássio', 'C');
+    this.medMap.set('cloreto de cálcioXclorpromazina', 'C');
+    this.medMap.set('cloreto de cálcioXdantroleno', 'I');
+    this.medMap.set('cloreto de cálcioXdiazepam', 'I');
+    this.medMap.set('cloreto de cálcioXDOBUTamina', 'C');
+    this.medMap.set('cloreto de cálcioXDOPamina', 'C');
+    this.medMap.set('cloreto de cálcioXesmolol', 'C');
+    this.medMap.set('cloreto de cálcioXestreptomicina', 'C');
+    this.medMap.set('cloreto de cálcioXfenitoína', 'I');
+    this.medMap.set('cloreto de cálcioXfenobarbital', 'C');
+    this.medMap.set('cloreto de cálcioXfentanil', 'C');
+    this.medMap.set('cloreto de cálcioXfitomenadiona', 'C');
+    this.medMap.set('cloreto de cálcioXfluconazol', 'C');
+    this.medMap.set('cloreto de cálcioXfosfato de potássio', 'I');
+    this.medMap.set('cloreto de cálcioXfurosemida', 'C');
+    this.medMap.set('cloreto de cálcioXganciclovir', 'C');
+    this.medMap.set('cloreto de cálcioXgentamicina', 'C');
+    this.medMap.set('cloreto de cálcioXgluconato de cálcio', 'C');
+    this.medMap.set('cloreto de cálcioXhaloperidol', 'I');
+    this.medMap.set('cloreto de cálcioXheparina', 'C');
+    this.medMap.set('cloreto de cálcioXinsulina regular', 'C');
+    this.medMap.set('cloreto de cálcioXlidocaína', 'C');
+    this.medMap.set('cloreto de cálcioXlinezolida', 'C');
+    this.medMap.set('cloreto de cálcioXmanitol', 'C');
+    this.medMap.set('cloreto de cálcioXmeropenem', 'I');
+    this.medMap.set('cloreto de cálcioXmetilprednisolona', 'I');
+    this.medMap.set('cloreto de cálcioXmetoclopramida', 'C');
+    this.medMap.set('cloreto de cálcioXmetoprolol', 'C');
+    this.medMap.set('cloreto de cálcioXmetronidazol', 'C');
+    this.medMap.set('cloreto de cálcioXmidazolam', 'C');
+    this.medMap.set('cloreto de cálcioXmilrinona', 'C');
+    this.medMap.set('cloreto de cálcioXmorfina', 'C');
+    this.medMap.set('cloreto de cálcioXnaloxona', 'C');
+    this.medMap.set('cloreto de cálcioXnitroGLICERINA', 'C');
+    this.medMap.set('cloreto de cálcioXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('cloreto de cálcioXnoradrenalina', 'C');
+    this.medMap.set('cloreto de cálcioXocitocina', 'C');
+    this.medMap.set('cloreto de cálcioXoctreotida', 'C');
+    this.medMap.set('cloreto de cálcioXondansetrona', 'C');
+    this.medMap.set('cloreto de cálcioXoxacilina', 'I');
+    this.medMap.set('cloreto de cálcioXpancurônio', 'C');
+    this.medMap.set('cloreto de cálcioXpenicilina G potássica', 'C');
+    this.medMap.set('cloreto de cálcioXpiperacilina-tazobactam', 'C');
+    this.medMap.set('cloreto de cálcioXpolimixina B', 'C');
+    this.medMap.set('cloreto de cálcioXpolivitamínico', 'C');
+    this.medMap.set('cloreto de cálcioXprometazina', 'C');
+    this.medMap.set('cloreto de cálcioXpropofol', 'I');
+    this.medMap.set('cloreto de cálcioXprotamina', 'C');
+    this.medMap.set('cloreto de cálcioXranitidina', 'C');
+    this.medMap.set('cloreto de cálcioXringer lactato', 'C');
+    this.medMap.set('cloreto de cálcioXsuccinilcolina', 'C');
+    this.medMap.set('cloreto de cálcioXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cloreto de cálcioXsulfato de magnésio', 'I');
+    this.medMap.set('cloreto de cálcioXtiamina', 'C');
+    this.medMap.set('cloreto de cálcioXtigeciclina', 'C');
+    this.medMap.set('cloreto de cálcioXvancomicina', 'C');
+    this.medMap.set('cloreto de cálcioXVASopressina', 'C');
+    this.medMap.set('cloreto de cálcioXvoriconazol', 'C');
+
+    this.medMap.set('cloreto de potássioXclorpromazina', 'C');
+    this.medMap.set('cloreto de potássioXdantroleno', 'I');
+    this.medMap.set('cloreto de potássioXdexametasona', 'C');
+    this.medMap.set('cloreto de potássioXdiazepam', 'I');
+    this.medMap.set('cloreto de potássioXDOBUTamina', 'C');
+    this.medMap.set('cloreto de potássioXDOPamina', 'C');
+    this.medMap.set('cloreto de potássioXdroperidol', 'C');
+    this.medMap.set('cloreto de potássioXesmolol', 'C');
+    this.medMap.set('cloreto de potássioXestreptomicina', 'C');
+    this.medMap.set('cloreto de potássioXfenitoína', 'I');
+    this.medMap.set('cloreto de potássioXfenobarbital', 'C');
+    this.medMap.set('cloreto de potássioXfentanil', 'C');
+    this.medMap.set('cloreto de potássioXfilgrastima', 'C');
+    this.medMap.set('cloreto de potássioXfitomenadiona', 'C');
+    this.medMap.set('cloreto de potássioXfluconazol', 'C');
+    this.medMap.set('cloreto de potássioXfurosemida', 'C');
+    this.medMap.set('cloreto de potássioXganciclovir', 'C');
+    this.medMap.set('cloreto de potássioXgentamicina', 'C');
+    this.medMap.set('cloreto de potássioXgluconato de cálcio', 'C');
+    this.medMap.set('cloreto de potássioXhaloperidol', 'I');
+    this.medMap.set('cloreto de potássioXheparina', 'C');
+    this.medMap.set('cloreto de potássioXhidrocortisona', 'C');
+    this.medMap.set('cloreto de potássioXimipenem-cilastatina', 'C');
+    this.medMap.set('cloreto de potássioXinsulina regular', 'C');
+    this.medMap.set('cloreto de potássioXlevofloxacino', 'C');
+    this.medMap.set('cloreto de potássioXlidocaína', 'C');
+    this.medMap.set('cloreto de potássioXlinezolida', 'C');
+    this.medMap.set('cloreto de potássioXmanitol', 'C');
+    this.medMap.set('cloreto de potássioXmeropenem', 'C');
+    this.medMap.set('cloreto de potássioXmetoclopramida', 'C');
+    this.medMap.set('cloreto de potássioXmetoprolol', 'C');
+    this.medMap.set('cloreto de potássioXmetronidazol', 'C');
+    this.medMap.set('cloreto de potássioXmidazolam', 'C');
+    this.medMap.set('cloreto de potássioXmilrinona', 'C');
+    this.medMap.set('cloreto de potássioXmorfina', 'C');
+    this.medMap.set('cloreto de potássioXnaloxona', 'C');
+    this.medMap.set('cloreto de potássioXneostigmina', 'C');
+    this.medMap.set('cloreto de potássioXnitroGLICERINA', 'C');
+    this.medMap.set('cloreto de potássioXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('cloreto de potássioXnoradrenalina', 'C');
+    this.medMap.set('cloreto de potássioXocitocina', 'C');
+    this.medMap.set('cloreto de potássioXoctreotida', 'C');
+    this.medMap.set('cloreto de potássioXondansetrona', 'C');
+    this.medMap.set('cloreto de potássioXoxacilina', 'C');
+    this.medMap.set('cloreto de potássioXpamidronato', 'C');
+    this.medMap.set('cloreto de potássioXpancurônio', 'C');
+    this.medMap.set('cloreto de potássioXpenicilina G potássica', 'C');
+    this.medMap.set('cloreto de potássioXpiperacilina-tazobactam', 'C');
+    this.medMap.set('cloreto de potássioXpolimixina B', 'C');
+    this.medMap.set('cloreto de potássioXpolivitamínico', 'C');
+    this.medMap.set('cloreto de potássioXpropofol', 'C');
+    this.medMap.set('cloreto de potássioXprotamina', 'C');
+    this.medMap.set('cloreto de potássioXranitidina', 'C');
+    this.medMap.set('cloreto de potássioXremifentanil', 'C');
+    this.medMap.set('cloreto de potássioXringer lactato', 'C');
+    this.medMap.set('cloreto de potássioXrocurônio', 'C');
+    this.medMap.set('cloreto de potássioXsuccinilcolina', 'C');
+    this.medMap.set('cloreto de potássioXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('cloreto de potássioXsulfato de magnésio', 'C');
+    this.medMap.set('cloreto de potássioXtiamina', 'C');
+    this.medMap.set('cloreto de potássioXtigeciclina', 'C');
+    this.medMap.set('cloreto de potássioXtiopental', 'C');
+    this.medMap.set('cloreto de potássioXvancomicina', 'C');
+    this.medMap.set('cloreto de potássioXVASopressina', 'C');
+    this.medMap.set('cloreto de potássioXvoriconazol', 'C');
+    this.medMap.set('cloreto de potássioXzidovudina', 'C');
+
+    this.medMap.set('clorpromazinaXdantroleno', 'I');
+    this.medMap.set('clorpromazinaXdiazepam', 'I');
+    this.medMap.set('clorpromazinaXDOBUTamina', 'C');
+    this.medMap.set('clorpromazinaXDOPamina', 'C');
+    this.medMap.set('clorpromazinaXesmolol', 'C');
+    this.medMap.set('clorpromazinaXestreptomicina', 'C');
+    this.medMap.set('clorpromazinaXfenitoína', 'I');
+    this.medMap.set('clorpromazinaXfenobarbital', 'I');
+    this.medMap.set('clorpromazinaXfentanil', 'C');
+    this.medMap.set('clorpromazinaXfilgrastima', 'C');
+    this.medMap.set('clorpromazinaXfitomenadiona', 'C');
+    this.medMap.set('clorpromazinaXfluconazol', 'C');
+    this.medMap.set('clorpromazinaXganciclovir', 'I');
+    this.medMap.set('clorpromazinaXgentamicina', 'C');
+    this.medMap.set('clorpromazinaXgluconato de cálcio', 'C');
+    this.medMap.set('clorpromazinaXhidrocortisona', 'C');
+    this.medMap.set('clorpromazinaXimipenem-cilastatina', 'I');
+    this.medMap.set('clorpromazinaXinsulina regular', 'I');
+    this.medMap.set('clorpromazinaXlevofloxacino', 'C');
+    this.medMap.set('clorpromazinaXlidocaína', 'C');
+    this.medMap.set('clorpromazinaXlinezolida', 'I');
+    this.medMap.set('clorpromazinaXmanitol', 'C');
+    this.medMap.set('clorpromazinaXmetilprednisolona', 'C');
+    this.medMap.set('clorpromazinaXmetoclopramida', 'C');
+    this.medMap.set('clorpromazinaXmetoprolol', 'C');
+    this.medMap.set('clorpromazinaXmetronidazol', 'C');
+    this.medMap.set('clorpromazinaXmidazolam', 'C');
+    this.medMap.set('clorpromazinaXmorfina', 'C');
+    this.medMap.set('clorpromazinaXnaloxona', 'C');
+    this.medMap.set('clorpromazinaXnitroGLICERINA', 'C');
+    this.medMap.set('clorpromazinaXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('clorpromazinaXnoradrenalina', 'C');
+    this.medMap.set('clorpromazinaXoctreotida', 'C');
+    this.medMap.set('clorpromazinaXondansetrona', 'C');
+    this.medMap.set('clorpromazinaXoxacilina', 'C');
+    this.medMap.set('clorpromazinaXpamidronato', 'C');
+    this.medMap.set('clorpromazinaXpancurônio', 'C');
+    this.medMap.set('clorpromazinaXpenicilina G potássica', 'C');
+    this.medMap.set('clorpromazinaXpiperacilina-tazobactam', 'I');
+    this.medMap.set('clorpromazinaXpolimixina B', 'C');
+    this.medMap.set('clorpromazinaXpolivitamínico', 'C');
+    this.medMap.set('clorpromazinaXprometazina', 'C');
+    this.medMap.set('clorpromazinaXpropofol', 'C');
+    this.medMap.set('clorpromazinaXprotamina', 'C');
+    this.medMap.set('clorpromazinaXranitidina', 'C');
+    this.medMap.set('clorpromazinaXremifentanil', 'V');
+    this.medMap.set('clorpromazinaXringer lactato', 'C');
+    this.medMap.set('clorpromazinaXrocurônio', 'C');
+    this.medMap.set('clorpromazinaXsuccinilcolina', 'C');
+    this.medMap.set('clorpromazinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('clorpromazinaXsulfato de magnésio', 'C');
+    this.medMap.set('clorpromazinaXtiamina', 'C');
+    this.medMap.set('clorpromazinaXtigeciclina', 'I');
+    this.medMap.set('clorpromazinaXvancomicina', 'C');
+    this.medMap.set('clorpromazinaXVASopressina', 'C');
+    this.medMap.set('clorpromazinaXvoriconazol', 'C');
+
+    this.medMap.set('dantrolenoXdexametasona', 'I');
+    this.medMap.set('dantrolenoXdiazepam', 'I');
+    this.medMap.set('dantrolenoXDOBUTamina', 'I');
+    this.medMap.set('dantrolenoXDOPamina', 'I');
+    this.medMap.set('dantrolenoXesmolol', 'I');
+    this.medMap.set('dantrolenoXfenitoína', 'I');
+    this.medMap.set('dantrolenoXfenobarbital', 'I');
+    this.medMap.set('dantrolenoXfentanil', 'I');
+    this.medMap.set('dantrolenoXfitomenadiona', 'I');
+    this.medMap.set('dantrolenoXfluconazol', 'I');
+    this.medMap.set('dantrolenoXfurosemida', 'I');
+    this.medMap.set('dantrolenoXganciclovir', 'I');
+    this.medMap.set('dantrolenoXgentamicina', 'I');
+    this.medMap.set('dantrolenoXgluconato de cálcio', 'I');
+    this.medMap.set('dantrolenoXhaloperidol', 'I');
+    this.medMap.set('dantrolenoXheparina', 'I');
+    this.medMap.set('dantrolenoXhidralazina', 'I');
+    this.medMap.set('dantrolenoXhidrocortisona', 'I');
+    this.medMap.set('dantrolenoXimipenem-cilastatina', 'I');
+    this.medMap.set('dantrolenoXinsulina regular', 'I');
+    this.medMap.set('dantrolenoXlidocaína', 'I');
+    this.medMap.set('dantrolenoXlinezolida', 'I');
+    this.medMap.set('dantrolenoXmanitol', 'I');
+    this.medMap.set('dantrolenoXmetilprednisolona', 'I');
+    this.medMap.set('dantrolenoXmetoclopramida', 'I');
+    this.medMap.set('dantrolenoXmetoprolol', 'I');
+    this.medMap.set('dantrolenoXmetronidazol', 'I');
+    this.medMap.set('dantrolenoXmidazolam', 'I');
+    this.medMap.set('dantrolenoXmilrinona', 'I');
+    this.medMap.set('dantrolenoXmorfina', 'I');
+    this.medMap.set('dantrolenoXnaloxona', 'I');
+    this.medMap.set('dantrolenoXnitroGLICERINA', 'I');
+    this.medMap.set('dantrolenoXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('dantrolenoXnoradrenalina', 'I');
+    this.medMap.set('dantrolenoXocitocina', 'I');
+    this.medMap.set('dantrolenoXoctreotida', 'I');
+    this.medMap.set('dantrolenoXondansetrona', 'I');
+    this.medMap.set('dantrolenoXoxacilina', 'I');
+    this.medMap.set('dantrolenoXpamidronato', 'I');
+    this.medMap.set('dantrolenoXpancurônio', 'I');
+    this.medMap.set('dantrolenoXpenicilina G potássica', 'I');
+    this.medMap.set('dantrolenoXpiperacilina-tazobactam', 'I');
+    this.medMap.set('dantrolenoXpolimixina B', 'I');
+    this.medMap.set('dantrolenoXpolivitamínico', 'I');
+    this.medMap.set('dantrolenoXprometazina', 'I');
+    this.medMap.set('dantrolenoXprotamina', 'I');
+    this.medMap.set('dantrolenoXranitidina', 'I');
+    this.medMap.set('dantrolenoXringer lactato', 'I');
+    this.medMap.set('dantrolenoXsuccinilcolina', 'I');
+    this.medMap.set('dantrolenoXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('dantrolenoXsulfato de magnésio', 'I');
+    this.medMap.set('dantrolenoXtiamina', 'I');
+    this.medMap.set('dantrolenoXtigeciclina', 'I');
+    this.medMap.set('dantrolenoXvancomicina', 'I');
+    this.medMap.set('dantrolenoXVASopressina', 'I');
+    this.medMap.set('dantrolenoXvoriconazol', 'I');
+
+    this.medMap.set('DESMopressinaXnaloxona', 'C');
+
+    this.medMap.set('dexametasonaXdiazepam', 'I');
+    this.medMap.set('dexametasonaXDOBUTamina', 'I');
+    this.medMap.set('dexametasonaXDOPamina', 'C');
+    this.medMap.set('dexametasonaXesmolol', 'I');
+    this.medMap.set('dexametasonaXestreptomicina', 'C');
+    this.medMap.set('dexametasonaXfenitoína', 'I');
+    this.medMap.set('dexametasonaXfenobarbital', 'C');
+    this.medMap.set('dexametasonaXfentanil', 'C');
+    this.medMap.set('dexametasonaXfilgrastima', 'C');
+    this.medMap.set('dexametasonaXfitomenadiona', 'C');
+    this.medMap.set('dexametasonaXfluconazol', 'C');
+    this.medMap.set('dexametasonaXfurosemida', 'C');
+    this.medMap.set('dexametasonaXganciclovir', 'C');
+    this.medMap.set('dexametasonaXhaloperidol', 'I');
+    this.medMap.set('dexametasonaXheparina', 'C');
+    this.medMap.set('dexametasonaXhidrocortisona', 'C');
+    this.medMap.set('dexametasonaXhioscina', 'C');
+    this.medMap.set('dexametasonaXimipenem-cilastatina', 'C');
+    this.medMap.set('dexametasonaXinsulina regular', 'C');
+    this.medMap.set('dexametasonaXlevofloxacino', 'C');
+    this.medMap.set('dexametasonaXlidocaína', 'C');
+    this.medMap.set('dexametasonaXlinezolida', 'C');
+    this.medMap.set('dexametasonaXmanitol', 'C');
+    this.medMap.set('dexametasonaXmeropenem', 'C');
+    this.medMap.set('dexametasonaXmetilprednisolona', 'C');
+    this.medMap.set('dexametasonaXmetoclopramida', 'C');
+    this.medMap.set('dexametasonaXmetoprolol', 'C');
+    this.medMap.set('dexametasonaXmetronidazol', 'C');
+    this.medMap.set('dexametasonaXmidazolam', 'I');
+    this.medMap.set('dexametasonaXmilrinona', 'C');
+    this.medMap.set('dexametasonaXmorfina', 'C');
+    this.medMap.set('dexametasonaXnaloxona', 'C');
+    this.medMap.set('dexametasonaXnitroGLICERINA', 'C');
+    this.medMap.set('dexametasonaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('dexametasonaXnoradrenalina', 'C');
+    this.medMap.set('dexametasonaXocitocina', 'C');
+    this.medMap.set('dexametasonaXoctreotida', 'C');
+    this.medMap.set('dexametasonaXondansetrona', 'C');
+    this.medMap.set('dexametasonaXoxacilina', 'C');
+    this.medMap.set('dexametasonaXpamidronato', 'C');
+    this.medMap.set('dexametasonaXpancurônio', 'C');
+    this.medMap.set('dexametasonaXpenicilina G potássica', 'C');
+    this.medMap.set('dexametasonaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('dexametasonaXpolivitamínico', 'C');
+    this.medMap.set('dexametasonaXpropofol', 'C');
+    this.medMap.set('dexametasonaXprotamina', 'I');
+    this.medMap.set('dexametasonaXranitidina', 'C');
+    this.medMap.set('dexametasonaXremifentanil', 'C');
+    this.medMap.set('dexametasonaXringer lactato', 'C');
+    this.medMap.set('dexametasonaXsalbutamol', 'C');
+    this.medMap.set('dexametasonaXsuccinilcolina', 'C');
+    this.medMap.set('dexametasonaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('dexametasonaXsulfato de magnésio', 'I');
+    this.medMap.set('dexametasonaXtiamina', 'C');
+    this.medMap.set('dexametasonaXtigeciclina', 'C');
+    this.medMap.set('dexametasonaXtramadol', 'C');
+    this.medMap.set('dexametasonaXvancomicina', 'C');
+    this.medMap.set('dexametasonaXVASopressina', 'C');
+    this.medMap.set('dexametasonaXvoriconazol', 'C');
+    this.medMap.set('dexametasonaXzidovudina', 'C');
+
+    this.medMap.set('diazepamXDOPamina', 'I');
+    this.medMap.set('diazepamXesmolol', 'I');
+    this.medMap.set('diazepamXfenitoína', 'I');
+    this.medMap.set('diazepamXfenobarbital', 'I');
+    this.medMap.set('diazepamXfitomenadiona', 'I');
+    this.medMap.set('diazepamXfluconazol', 'I');
+    this.medMap.set('diazepamXfurosemida', 'I');
+    this.medMap.set('diazepamXganciclovir', 'I');
+    this.medMap.set('diazepamXgentamicina', 'I');
+    this.medMap.set('diazepamXgluconato de cálcio', 'I');
+    this.medMap.set('diazepamXhaloperidol', 'I');
+    this.medMap.set('diazepamXheparina', 'I');
+    this.medMap.set('diazepamXhidralazina', 'I');
+    this.medMap.set('diazepamXhidrocortisona', 'I');
+    this.medMap.set('diazepamXimipenem-cilastatina', 'I');
+    this.medMap.set('diazepamXinsulina regular', 'I');
+    this.medMap.set('diazepamXlevofloxacino', 'I');
+    this.medMap.set('diazepamXlidocaína', 'I');
+    this.medMap.set('diazepamXlinezolida', 'I');
+    this.medMap.set('diazepamXmanitol', 'I');
+    this.medMap.set('diazepamXmeropenem', 'I');
+    this.medMap.set('diazepamXmetilprednisolona', 'I');
+    this.medMap.set('diazepamXmetoclopramida', 'I');
+    this.medMap.set('diazepamXmetoprolol', 'I');
+    this.medMap.set('diazepamXmetronidazol', 'I');
+    this.medMap.set('diazepamXmidazolam', 'I');
+    this.medMap.set('diazepamXmilrinona', 'I');
+    this.medMap.set('diazepamXnaloxona', 'I');
+    this.medMap.set('diazepamXnitroGLICERINA', 'I');
+    this.medMap.set('diazepamXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('diazepamXnoradrenalina', 'I');
+    this.medMap.set('diazepamXocitocina', 'I');
+    this.medMap.set('diazepamXoctreotida', 'I');
+    this.medMap.set('diazepamXondansetrona', 'V');
+    this.medMap.set('diazepamXoxacilina', 'I');
+    this.medMap.set('diazepamXpamidronato', 'I');
+    this.medMap.set('diazepamXpancurônio', 'I');
+    this.medMap.set('diazepamXpenicilina G potássica', 'I');
+    this.medMap.set('diazepamXpiperacilina-tazobactam', 'C');
+    this.medMap.set('diazepamXpolimixina B', 'I');
+    this.medMap.set('diazepamXpolivitamínico', 'I');
+    this.medMap.set('diazepamXprometazina', 'I');
+    this.medMap.set('diazepamXpropofol', 'I');
+    this.medMap.set('diazepamXprotamina', 'I');
+    this.medMap.set('diazepamXranitidina', 'I');
+    this.medMap.set('diazepamXremifentanil', 'I');
+    this.medMap.set('diazepamXringer lactato', 'I');
+    this.medMap.set('diazepamXrocurônio', 'I');
+    this.medMap.set('diazepamXsuccinilcolina', 'I');
+    this.medMap.set('diazepamXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('diazepamXsulfato de magnésio', 'I');
+    this.medMap.set('diazepamXtiamina', 'I');
+    this.medMap.set('diazepamXtigeciclina', 'I');
+    this.medMap.set('diazepamXvancomicina', 'I');
+    this.medMap.set('diazepamXVASopressina', 'I');
+    this.medMap.set('diazepamXvoriconazol', 'I');
+
+    this.medMap.set('DOBUTaminaXDOPamina', 'C');
+    this.medMap.set('DOBUTaminaXesmolol', 'C');
+    this.medMap.set('DOBUTaminaXfenitoína', 'I');
+    this.medMap.set('DOBUTaminaXfenobarbital', 'I');
+    this.medMap.set('DOBUTaminaXfentanil', 'C');
+    this.medMap.set('DOBUTaminaXfluconazol', 'C');
+    this.medMap.set('DOBUTaminaXflumazenil', 'C');
+    this.medMap.set('DOBUTaminaXfurosemida', 'I');
+    this.medMap.set('DOBUTaminaXganciclovir', 'I');
+    this.medMap.set('DOBUTaminaXgentamicina', 'C');
+    this.medMap.set('DOBUTaminaXgluconato de cálcio', 'C');
+    this.medMap.set('DOBUTaminaXhaloperidol', 'V');
+    this.medMap.set('DOBUTaminaXheparina', 'V');
+    this.medMap.set('DOBUTaminaXhidralazina', 'V');
+    this.medMap.set('DOBUTaminaXhidrocortisona', 'I');
+    this.medMap.set('DOBUTaminaXimipenem-cilastatina', 'V');
+    this.medMap.set('DOBUTaminaXinsulina regular', 'V');
+    this.medMap.set('DOBUTaminaXlevofloxacino', 'C');
+    this.medMap.set('DOBUTaminaXlidocaína', 'C');
+    this.medMap.set('DOBUTaminaXlinezolida', 'C');
+    this.medMap.set('DOBUTaminaXmanitol', 'C');
+    this.medMap.set('DOBUTaminaXmeropenem', 'C');
+    this.medMap.set('DOBUTaminaXmetilprednisolona', 'C');
+    this.medMap.set('DOBUTaminaXmetoclopramida', 'C');
+    this.medMap.set('DOBUTaminaXmetoprolol', 'C');
+    this.medMap.set('DOBUTaminaXmetronidazol', 'C');
+    this.medMap.set('DOBUTaminaXmidazolam', 'V');
+    this.medMap.set('DOBUTaminaXmilrinona', 'C');
+    this.medMap.set('DOBUTaminaXmorfina', 'C');
+    this.medMap.set('DOBUTaminaXnaloxona', 'C');
+    this.medMap.set('DOBUTaminaXnitroGLICERINA', 'C');
+    this.medMap.set('DOBUTaminaXnitroPRUSSIATO de sódio', 'V');
+    this.medMap.set('DOBUTaminaXnoradrenalina', 'C');
+    this.medMap.set('DOBUTaminaXocitocina', 'C');
+    this.medMap.set('DOBUTaminaXoctreotida', 'C');
+    this.medMap.set('DOBUTaminaXondansetrona', 'C');
+    this.medMap.set('DOBUTaminaXoxacilina', 'I');
+    this.medMap.set('DOBUTaminaXpamidronato', 'C');
+    this.medMap.set('DOBUTaminaXpancurônio', 'C');
+    this.medMap.set('DOBUTaminaXpenicilina G potássica', 'I');
+    this.medMap.set('DOBUTaminaXpiperacilina-tazobactam', 'I');
+    this.medMap.set('DOBUTaminaXpolimixina B', 'C');
+    this.medMap.set('DOBUTaminaXpolivitamínico', 'C');
+    this.medMap.set('DOBUTaminaXprometazina', 'C');
+    this.medMap.set('DOBUTaminaXpropofol', 'V');
+    this.medMap.set('DOBUTaminaXprotamina', 'C');
+    this.medMap.set('DOBUTaminaXranitidina', 'C');
+    this.medMap.set('DOBUTaminaXremifentanil', 'C');
+    this.medMap.set('DOBUTaminaXringer lactato', 'C');
+    this.medMap.set('DOBUTaminaXrocurônio', 'C');
+    this.medMap.set('DOBUTaminaXsuccinilcolina', 'C');
+    this.medMap.set('DOBUTaminaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('DOBUTaminaXsulfato de magnésio', 'C');
+    this.medMap.set('DOBUTaminaXtiamina', 'C');
+    this.medMap.set('DOBUTaminaXtigeciclina', 'C');
+    this.medMap.set('DOBUTaminaXtiopental', 'I');
+    this.medMap.set('DOBUTaminaXvancomicina', 'C');
+    this.medMap.set('DOBUTaminaXVASopressina', 'C');
+    this.medMap.set('DOBUTaminaXvoriconazol', 'C');
+    this.medMap.set('DOBUTaminaXzidovudina', 'C');
+
+    this.medMap.set('DOPaminaXdroperidol', 'C');
+    this.medMap.set('DOPaminaXesmolol', 'C');
+    this.medMap.set('DOPaminaXfenitoína', 'I');
+    this.medMap.set('DOPaminaXfenobarbital', 'C');
+    this.medMap.set('DOPaminaXfentanil', 'C');
+    this.medMap.set('DOPaminaXfitomenadiona', 'C');
+    this.medMap.set('DOPaminaXfluconazol', 'C');
+    this.medMap.set('DOPaminaXflumazenil', 'C');
+    this.medMap.set('DOPaminaXganciclovir', 'I');
+    this.medMap.set('DOPaminaXgentamicina', 'C');
+    this.medMap.set('DOPaminaXgluconato de cálcio', 'C');
+    this.medMap.set('DOPaminaXhaloperidol', 'V');
+    this.medMap.set('DOPaminaXheparina', 'C');
+    this.medMap.set('DOPaminaXhidrocortisona', 'C');
+    this.medMap.set('DOPaminaXimipenem-cilastatina', 'C');
+    this.medMap.set('DOPaminaXlevofloxacino', 'C');
+    this.medMap.set('DOPaminaXlidocaína', 'C');
+    this.medMap.set('DOPaminaXlinezolida', 'C');
+    this.medMap.set('DOPaminaXmanitol', 'C');
+    this.medMap.set('DOPaminaXmeropenem', 'C');
+    this.medMap.set('DOPaminaXmetilprednisolona', 'C');
+    this.medMap.set('DOPaminaXmetoclopramida', 'C');
+    this.medMap.set('DOPaminaXmetoprolol', 'C');
+    this.medMap.set('DOPaminaXmetronidazol', 'C');
+    this.medMap.set('DOPaminaXmidazolam', 'C');
+    this.medMap.set('DOPaminaXmilrinona', 'C');
+    this.medMap.set('DOPaminaXmorfina', 'C');
+    this.medMap.set('DOPaminaXnaloxona', 'C');
+    this.medMap.set('DOPaminaXnitroGLICERINA', 'C');
+    this.medMap.set('DOPaminaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('DOPaminaXnoradrenalina', 'C');
+    this.medMap.set('DOPaminaXocitocina', 'C');
+    this.medMap.set('DOPaminaXoctreotida', 'C');
+    this.medMap.set('DOPaminaXondansetrona', 'C');
+    this.medMap.set('DOPaminaXoxacilina', 'C');
+    this.medMap.set('DOPaminaXpamidronato', 'C');
+    this.medMap.set('DOPaminaXpancurônio', 'C');
+    this.medMap.set('DOPaminaXpenicilina G potássica', 'C');
+    this.medMap.set('DOPaminaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('DOPaminaXpolimixina B', 'C');
+    this.medMap.set('DOPaminaXpolivitamínico', 'C');
+    this.medMap.set('DOPaminaXprometazina', 'C');
+    this.medMap.set('DOPaminaXprotamina', 'C');
+    this.medMap.set('DOPaminaXranitidina', 'C');
+    this.medMap.set('DOPaminaXremifentanil', 'C');
+    this.medMap.set('DOPaminaXringer lactato', 'C');
+    this.medMap.set('DOPaminaXrocurônio', 'C');
+    this.medMap.set('DOPaminaXsuccinilcolina', 'C');
+    this.medMap.set('DOPaminaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('DOPaminaXsulfato de magnésio', 'C');
+    this.medMap.set('DOPaminaXtiamina', 'C');
+    this.medMap.set('DOPaminaXtigeciclina', 'C');
+    this.medMap.set('DOPaminaXtiopental', 'I');
+    this.medMap.set('DOPaminaXvancomicina', 'C');
+    this.medMap.set('DOPaminaXVASopressina', 'C');
+    this.medMap.set('DOPaminaXvoriconazol', 'C');
+    this.medMap.set('DOPaminaXzidovudina', 'C');
+
+    this.medMap.set('droperidolXfentanil', 'C');
+    this.medMap.set('droperidolXfilgrastima', 'C');
+    this.medMap.set('droperidolXfluconazol', 'C');
+    this.medMap.set('droperidolXfurosemida', 'I');
+    this.medMap.set('droperidolXhidrocortisona', 'C');
+    this.medMap.set('droperidolXlevofloxacino', 'C');
+    this.medMap.set('droperidolXlinezolida', 'C');
+    this.medMap.set('droperidolXmetoclopramida', 'C');
+    this.medMap.set('droperidolXmetronidazol', 'C');
+    this.medMap.set('droperidolXmidazolam', 'C');
+    this.medMap.set('droperidolXmilrinona', 'C');
+    this.medMap.set('droperidolXmorfina', 'C');
+    this.medMap.set('droperidolXnaloxona', 'C');
+    this.medMap.set('droperidolXocitocina', 'C');
+    this.medMap.set('droperidolXoctreotida', 'C');
+    this.medMap.set('droperidolXondansetrona', 'C');
+    this.medMap.set('droperidolXpamidronato', 'C');
+    this.medMap.set('droperidolXpancurônio', 'C');
+    this.medMap.set('droperidolXpiperacilina-tazobactam', 'I');
+    this.medMap.set('droperidolXprometazina', 'C');
+    this.medMap.set('droperidolXpropofol', 'C');
+    this.medMap.set('droperidolXremifentanil', 'C');
+    this.medMap.set('droperidolXringer lactato', 'C');
+    this.medMap.set('droperidolXrocurônio', 'C');
+    this.medMap.set('droperidolXtigeciclina', 'C');
+    this.medMap.set('droperidolXtramadol', 'C');
+    this.medMap.set('droperidolXVASopressina', 'C');
+    this.medMap.set('droperidolXvoriconazol', 'C');
+
+    this.medMap.set('esmololXestreptomicina', 'C');
+    this.medMap.set('esmololXfenitoína', 'V');
+    this.medMap.set('esmololXfenobarbital', 'I');
+    this.medMap.set('esmololXfentanil', 'C');
+    this.medMap.set('esmololXfitomenadiona', 'C');
+    this.medMap.set('esmololXfluconazol', 'C');
+    this.medMap.set('esmololXfosfato de potássio', 'C');
+    this.medMap.set('esmololXfurosemida', 'I');
+    this.medMap.set('esmololXganciclovir', 'I');
+    this.medMap.set('esmololXgentamicina', 'C');
+    this.medMap.set('esmololXgluconato de cálcio', 'C');
+    this.medMap.set('esmololXheparina', 'C');
+    this.medMap.set('esmololXhidrocortisona', 'V');
+    this.medMap.set('esmololXimipenem-cilastatina', 'C');
+    this.medMap.set('esmololXinsulina regular', 'C');
+    this.medMap.set('esmololXlevofloxacino', 'C');
+    this.medMap.set('esmololXlidocaína', 'C');
+    this.medMap.set('esmololXlinezolida', 'C');
+    this.medMap.set('esmololXmanitol', 'C');
+    this.medMap.set('esmololXmeropenem', 'C');
+    this.medMap.set('esmololXmetoclopramida', 'C');
+    this.medMap.set('esmololXmetoprolol', 'C');
+    this.medMap.set('esmololXmetronidazol', 'C');
+    this.medMap.set('esmololXmidazolam', 'C');
+    this.medMap.set('esmololXmilrinona', 'I');
+    this.medMap.set('esmololXmorfina', 'C');
+    this.medMap.set('esmololXnaloxona', 'C');
+    this.medMap.set('esmololXnitroGLICERINA', 'C');
+    this.medMap.set('esmololXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('esmololXnoradrenalina', 'C');
+    this.medMap.set('esmololXocitocina', 'C');
+    this.medMap.set('esmololXoctreotida', 'C');
+    this.medMap.set('esmololXondansetrona', 'C');
+    this.medMap.set('esmololXoxacilina', 'I');
+    this.medMap.set('esmololXpamidronato', 'C');
+    this.medMap.set('esmololXpancurônio', 'C');
+    this.medMap.set('esmololXpenicilina G potássica', 'C');
+    this.medMap.set('esmololXpiperacilina-tazobactam', 'C');
+    this.medMap.set('esmololXpolimixina B', 'C');
+    this.medMap.set('esmololXprometazina', 'C');
+    this.medMap.set('esmololXpropofol', 'C');
+    this.medMap.set('esmololXprotamina', 'C');
+    this.medMap.set('esmololXranitidina', 'C');
+    this.medMap.set('esmololXremifentanil', 'C');
+    this.medMap.set('esmololXringer lactato', 'C');
+    this.medMap.set('esmololXrocurônio', 'C');
+    this.medMap.set('esmololXsuccinilcolina', 'C');
+    this.medMap.set('esmololXsulfametoxazol-trimetoprima', 'V');
+    this.medMap.set('esmololXsulfato de magnésio', 'C');
+    this.medMap.set('esmololXtiamina', 'C');
+    this.medMap.set('esmololXtigeciclina', 'C');
+    this.medMap.set('esmololXvancomicina', 'C');
+    this.medMap.set('esmololXVASopressina', 'C');
+    this.medMap.set('esmololXvoriconazol', 'C');
+
+    this.medMap.set('estreptomicinaXfenobarbital', 'C');
+    this.medMap.set('estreptomicinaXfurosemida', 'C');
+    this.medMap.set('estreptomicinaXgentamicina', 'C');
+    this.medMap.set('estreptomicinaXgluconato de cálcio', 'C');
+    this.medMap.set('estreptomicinaXheparina', 'I');
+    this.medMap.set('estreptomicinaXhidralazina', 'C');
+    this.medMap.set('estreptomicinaXhidrocortisona', 'C');
+    this.medMap.set('estreptomicinaXlidocaína', 'C');
+    this.medMap.set('estreptomicinaXnoradrenalina', 'C');
+    this.medMap.set('estreptomicinaXocitocina', 'C');
+    this.medMap.set('estreptomicinaXpenicilina G potássica', 'C');
+    this.medMap.set('estreptomicinaXpolimixina B', 'C');
+    this.medMap.set('estreptomicinaXprometazina', 'C');
+    this.medMap.set('estreptomicinaXsuccinilcolina', 'C');
+
+    this.medMap.set('fenitoínaXfenobarbital', 'I');
+    this.medMap.set('fenitoínaXfentanil', 'I');
+    this.medMap.set('fenitoínaXfitomenadiona', 'I');
+    this.medMap.set('fenitoínaXfurosemida', 'I');
+    this.medMap.set('fenitoínaXganciclovir', 'I');
+    this.medMap.set('fenitoínaXgentamicina', 'I');
+    this.medMap.set('fenitoínaXgluconato de cálcio', 'I');
+    this.medMap.set('fenitoínaXhaloperidol', 'I');
+    this.medMap.set('fenitoínaXheparina', 'I');
+    this.medMap.set('fenitoínaXhidralazina', 'I');
+    this.medMap.set('fenitoínaXhidrocortisona', 'I');
+    this.medMap.set('fenitoínaXimipenem-cilastatina', 'I');
+    this.medMap.set('fenitoínaXinsulina regular', 'I');
+    this.medMap.set('fenitoínaXlevofloxacino', 'I');
+    this.medMap.set('fenitoínaXlidocaína', 'I');
+    this.medMap.set('fenitoínaXlinezolida', 'I');
+    this.medMap.set('fenitoínaXmanitol', 'I');
+    this.medMap.set('fenitoínaXmetilprednisolona', 'I');
+    this.medMap.set('fenitoínaXmetoclopramida', 'I');
+    this.medMap.set('fenitoínaXmetoprolol', 'I');
+    this.medMap.set('fenitoínaXmetronidazol', 'I');
+    this.medMap.set('fenitoínaXmidazolam', 'I');
+    this.medMap.set('fenitoínaXmilrinona', 'I');
+    this.medMap.set('fenitoínaXmorfina', 'I');
+    this.medMap.set('fenitoínaXnaloxona', 'I');
+    this.medMap.set('fenitoínaXnitroGLICERINA', 'I');
+    this.medMap.set('fenitoínaXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('fenitoínaXnoradrenalina', 'I');
+    this.medMap.set('fenitoínaXocitocina', 'I');
+    this.medMap.set('fenitoínaXoctreotida', 'I');
+    this.medMap.set('fenitoínaXondansetrona', 'I');
+    this.medMap.set('fenitoínaXoxacilina', 'I');
+    this.medMap.set('fenitoínaXpamidronato', 'I');
+    this.medMap.set('fenitoínaXpancurônio', 'I');
+    this.medMap.set('fenitoínaXpenicilina G potássica', 'I');
+    this.medMap.set('fenitoínaXpiperacilina-tazobactam', 'I');
+    this.medMap.set('fenitoínaXpolimixina B', 'I');
+    this.medMap.set('fenitoínaXpolivitamínico', 'I');
+    this.medMap.set('fenitoínaXprometazina', 'I');
+    this.medMap.set('fenitoínaXpropofol', 'I');
+    this.medMap.set('fenitoínaXprotamina', 'I');
+    this.medMap.set('fenitoínaXranitidina', 'I');
+    this.medMap.set('fenitoínaXringer lactato', 'I');
+    this.medMap.set('fenitoínaXrocurônio', 'I');
+    this.medMap.set('fenitoínaXsuccinilcolina', 'I');
+    this.medMap.set('fenitoínaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('fenitoínaXsulfato de magnésio', 'I');
+    this.medMap.set('fenitoínaXtiamina', 'I');
+    this.medMap.set('fenitoínaXtigeciclina', 'I');
+    this.medMap.set('fenitoínaXvancomicina', 'I');
+    this.medMap.set('fenitoínaXVASopressina', 'I');
+    this.medMap.set('fenitoínaXvoriconazol', 'I');
+
+    this.medMap.set('fenobarbitalXfentanil', 'C');
+    this.medMap.set('fenobarbitalXfitomenadiona', 'C');
+    this.medMap.set('fenobarbitalXfluconazol', 'C');
+    this.medMap.set('fenobarbitalXfurosemida', 'C');
+    this.medMap.set('fenobarbitalXganciclovir', 'C');
+    this.medMap.set('fenobarbitalXgentamicina', 'C');
+    this.medMap.set('fenobarbitalXgluconato de cálcio', 'C');
+    this.medMap.set('fenobarbitalXhaloperidol', 'I');
+    this.medMap.set('fenobarbitalXheparina', 'C');
+    this.medMap.set('fenobarbitalXhidrocortisona', 'C');
+    this.medMap.set('fenobarbitalXimipenem-cilastatina', 'V');
+    this.medMap.set('fenobarbitalXinsulina regular', 'C');
+    this.medMap.set('fenobarbitalXlinezolida', 'C');
+    this.medMap.set('fenobarbitalXmanitol', 'C');
+    this.medMap.set('fenobarbitalXmeropenem', 'C');
+    this.medMap.set('fenobarbitalXmetilprednisolona', 'C');
+    this.medMap.set('fenobarbitalXmetoclopramida', 'C');
+    this.medMap.set('fenobarbitalXmetoprolol', 'C');
+    this.medMap.set('fenobarbitalXmetronidazol', 'C');
+    this.medMap.set('fenobarbitalXmidazolam', 'I');
+    this.medMap.set('fenobarbitalXmilrinona', 'C');
+    this.medMap.set('fenobarbitalXmorfina', 'C');
+    this.medMap.set('fenobarbitalXnaloxona', 'C');
+    this.medMap.set('fenobarbitalXnitroGLICERINA', 'C');
+    this.medMap.set('fenobarbitalXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('fenobarbitalXnoradrenalina', 'I');
+    this.medMap.set('fenobarbitalXocitocina', 'C');
+    this.medMap.set('fenobarbitalXoctreotida', 'C');
+    this.medMap.set('fenobarbitalXondansetrona', 'I');
+    this.medMap.set('fenobarbitalXoxacilina', 'C');
+    this.medMap.set('fenobarbitalXpamidronato', 'C');
+    this.medMap.set('fenobarbitalXpancurônio', 'C');
+    this.medMap.set('fenobarbitalXpiperacilina-tazobactam', 'C');
+    this.medMap.set('fenobarbitalXpolimixina B', 'C');
+    this.medMap.set('fenobarbitalXpolivitamínico', 'C');
+    this.medMap.set('fenobarbitalXprometazina', 'I');
+    this.medMap.set('fenobarbitalXpropofol', 'C');
+    this.medMap.set('fenobarbitalXprotamina', 'I');
+    this.medMap.set('fenobarbitalXranitidina', 'C');
+    this.medMap.set('fenobarbitalXringer lactato', 'C');
+    this.medMap.set('fenobarbitalXrocurônio', 'C');
+    this.medMap.set('fenobarbitalXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('fenobarbitalXsulfato de magnésio', 'C');
+    this.medMap.set('fenobarbitalXtiamina', 'I');
+    this.medMap.set('fenobarbitalXtigeciclina', 'C');
+    this.medMap.set('fenobarbitalXtiopental', 'C');
+    this.medMap.set('fenobarbitalXvancomicina', 'C');
+    this.medMap.set('fenobarbitalXVASopressina', 'C');
+    this.medMap.set('fenobarbitalXvoriconazol', 'C');
+
+    this.medMap.set('fentanilXfitomenadiona', 'C');
+    this.medMap.set('fentanilXfluconazol', 'C');
+    this.medMap.set('fentanilXfurosemida', 'C');
+    this.medMap.set('fentanilXganciclovir', 'C');
+    this.medMap.set('fentanilXgentamicina', 'C');
+    this.medMap.set('fentanilXgluconato de cálcio', 'C');
+    this.medMap.set('fentanilXhaloperidol', 'V');
+    this.medMap.set('fentanilXheparina', 'C');
+    this.medMap.set('fentanilXhidralazina', 'V');
+    this.medMap.set('fentanilXhidrocortisona', 'C');
+    this.medMap.set('fentanilXhioscina', 'C');
+    this.medMap.set('fentanilXimipenem-cilastatina', 'C');
+    this.medMap.set('fentanilXinsulina regular', 'C');
+    this.medMap.set('fentanilXlevofloxacino', 'C');
+    this.medMap.set('fentanilXlidocaína', 'C');
+    this.medMap.set('fentanilXlinezolida', 'C');
+    this.medMap.set('fentanilXmanitol', 'C');
+    this.medMap.set('fentanilXmetilprednisolona', 'C');
+    this.medMap.set('fentanilXmetoclopramida', 'C');
+    this.medMap.set('fentanilXmetoprolol', 'C');
+    this.medMap.set('fentanilXmetronidazol', 'C');
+    this.medMap.set('fentanilXmidazolam', 'C');
+    this.medMap.set('fentanilXmilrinona', 'C');
+    this.medMap.set('fentanilXmorfina', 'C');
+    this.medMap.set('fentanilXnaloxona', 'C');
+    this.medMap.set('fentanilXnitroGLICERINA', 'C');
+    this.medMap.set('fentanilXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('fentanilXnoradrenalina', 'C');
+    this.medMap.set('fentanilXocitocina', 'C');
+    this.medMap.set('fentanilXoctreotida', 'C');
+    this.medMap.set('fentanilXondansetrona', 'C');
+    this.medMap.set('fentanilXoxacilina', 'C');
+    this.medMap.set('fentanilXpamidronato', 'C');
+    this.medMap.set('fentanilXpancurônio', 'C');
+    this.medMap.set('fentanilXpenicilina G potássica', 'C');
+    this.medMap.set('fentanilXpiperacilina-tazobactam', 'C');
+    this.medMap.set('fentanilXpolimixina B', 'C');
+    this.medMap.set('fentanilXpolivitamínico', 'C');
+    this.medMap.set('fentanilXprometazina', 'C');
+    this.medMap.set('fentanilXpropofol', 'C');
+    this.medMap.set('fentanilXprotamina', 'C');
+    this.medMap.set('fentanilXranitidina', 'C');
+    this.medMap.set('fentanilXremifentanil', 'C');
+    this.medMap.set('fentanilXringer lactato', 'C');
+    this.medMap.set('fentanilXrocurônio', 'C');
+    this.medMap.set('fentanilXsuccinilcolina', 'C');
+    this.medMap.set('fentanilXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('fentanilXsulfato de magnésio', 'C');
+    this.medMap.set('fentanilXtiamina', 'C');
+    this.medMap.set('fentanilXtigeciclina', 'C');
+    this.medMap.set('fentanilXtiopental', 'C');
+    this.medMap.set('fentanilXvancomicina', 'C');
+    this.medMap.set('fentanilXVASopressina', 'C');
+    this.medMap.set('fentanilXvoriconazol', 'C');
+
+    this.medMap.set('filgrastimaXfluconazol', 'C');
+    this.medMap.set('filgrastimaXfurosemida', 'I');
+    this.medMap.set('filgrastimaXganciclovir', 'C');
+    this.medMap.set('filgrastimaXgentamicina', 'V');
+    this.medMap.set('filgrastimaXgluconato de cálcio', 'C');
+    this.medMap.set('filgrastimaXhaloperidol', 'C');
+    this.medMap.set('filgrastimaXheparina', 'I');
+    this.medMap.set('filgrastimaXhidrocortisona', 'C');
+    this.medMap.set('filgrastimaXimipenem-cilastatina', 'V');
+    this.medMap.set('filgrastimaXlevofloxacino', 'C');
+    this.medMap.set('filgrastimaXmanitol', 'I');
+    this.medMap.set('filgrastimaXmetilprednisolona', 'I');
+    this.medMap.set('filgrastimaXmetoclopramida', 'C');
+    this.medMap.set('filgrastimaXmetronidazol', 'I');
+    this.medMap.set('filgrastimaXmorfina', 'C');
+    this.medMap.set('filgrastimaXondansetrona', 'C');
+    this.medMap.set('filgrastimaXprometazina', 'C');
+    this.medMap.set('filgrastimaXranitidina', 'C');
+    this.medMap.set('filgrastimaXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('filgrastimaXvancomicina', 'C');
+    this.medMap.set('filgrastimaXzidovudina', 'C');
+
+    this.medMap.set('fitomenadionaXfluconazol', 'C');
+    this.medMap.set('fitomenadionaXfurosemida', 'C');
+    this.medMap.set('fitomenadionaXganciclovir', 'C');
+    this.medMap.set('fitomenadionaXgentamicina', 'C');
+    this.medMap.set('fitomenadionaXgluconato de cálcio', 'C');
+    this.medMap.set('fitomenadionaXheparina', 'C');
+    this.medMap.set('fitomenadionaXhidrocortisona', 'C');
+    this.medMap.set('fitomenadionaXimipenem-cilastatina', 'C');
+    this.medMap.set('fitomenadionaXinsulina regular', 'C');
+    this.medMap.set('fitomenadionaXlidocaína', 'C');
+    this.medMap.set('fitomenadionaXmanitol', 'C');
+    this.medMap.set('fitomenadionaXmetoclopramida', 'C');
+    this.medMap.set('fitomenadionaXmetoprolol', 'C');
+    this.medMap.set('fitomenadionaXmidazolam', 'C');
+    this.medMap.set('fitomenadionaXmorfina', 'C');
+    this.medMap.set('fitomenadionaXnaloxona', 'C');
+    this.medMap.set('fitomenadionaXnitroGLICERINA', 'C');
+    this.medMap.set('fitomenadionaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('fitomenadionaXnoradrenalina', 'C');
+    this.medMap.set('fitomenadionaXocitocina', 'C');
+    this.medMap.set('fitomenadionaXondansetrona', 'C');
+    this.medMap.set('fitomenadionaXoxacilina', 'C');
+    this.medMap.set('fitomenadionaXpenicilina G potássica', 'C');
+    this.medMap.set('fitomenadionaXpolimixina B', 'C');
+    this.medMap.set('fitomenadionaXpolivitamínico', 'C');
+    this.medMap.set('fitomenadionaXprotamina', 'C');
+    this.medMap.set('fitomenadionaXranitidina', 'C');
+    this.medMap.set('fitomenadionaXringer lactato', 'C');
+    this.medMap.set('fitomenadionaXsuccinilcolina', 'C');
+    this.medMap.set('fitomenadionaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('fitomenadionaXsulfato de magnésio', 'I');
+    this.medMap.set('fitomenadionaXtiamina', 'C');
+    this.medMap.set('fitomenadionaXvancomicina', 'C');
+    this.medMap.set('fitomenadionaXVASopressina', 'C');
+
+    this.medMap.set('fluconazolXganciclovir', 'C');
+    this.medMap.set('fluconazolXgentamicina', 'C');
+    this.medMap.set('fluconazolXhaloperidol', 'I');
+    this.medMap.set('fluconazolXheparina', 'C');
+    this.medMap.set('fluconazolXhidralazina', 'V');
+    this.medMap.set('fluconazolXhidrocortisona', 'C');
+    this.medMap.set('fluconazolXimipenem-cilastatina', 'C');
+    this.medMap.set('fluconazolXinsulina regular', 'C');
+    this.medMap.set('fluconazolXlevofloxacino', 'C');
+    this.medMap.set('fluconazolXlidocaína', 'C');
+    this.medMap.set('fluconazolXlinezolida', 'C');
+    this.medMap.set('fluconazolXmanitol', 'C');
+    this.medMap.set('fluconazolXmeropenem', 'C');
+    this.medMap.set('fluconazolXmetilprednisolona', 'C');
+    this.medMap.set('fluconazolXmetoclopramida', 'C');
+    this.medMap.set('fluconazolXmetoprolol', 'C');
+    this.medMap.set('fluconazolXmetronidazol', 'C');
+    this.medMap.set('fluconazolXmidazolam', 'C');
+    this.medMap.set('fluconazolXmilrinona', 'C');
+    this.medMap.set('fluconazolXmorfina', 'C');
+    this.medMap.set('fluconazolXnaloxona', 'C');
+    this.medMap.set('fluconazolXnitroGLICERINA', 'C');
+    this.medMap.set('fluconazolXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('fluconazolXnoradrenalina', 'C');
+    this.medMap.set('fluconazolXocitocina', 'C');
+    this.medMap.set('fluconazolXoctreotida', 'C');
+    this.medMap.set('fluconazolXondansetrona', 'C');
+    this.medMap.set('fluconazolXoxacilina', 'C');
+    this.medMap.set('fluconazolXpamidronato', 'C');
+    this.medMap.set('fluconazolXpancurônio', 'C');
+    this.medMap.set('fluconazolXpenicilina G potássica', 'C');
+    this.medMap.set('fluconazolXpiperacilina-tazobactam', 'C');
+    this.medMap.set('fluconazolXpolimixina B', 'C');
+    this.medMap.set('fluconazolXpolivitamínico', 'C');
+    this.medMap.set('fluconazolXprometazina', 'C');
+    this.medMap.set('fluconazolXpropofol', 'C');
+    this.medMap.set('fluconazolXprotamina', 'C');
+    this.medMap.set('fluconazolXranitidina', 'C');
+    this.medMap.set('fluconazolXremifentanil', 'C');
+    this.medMap.set('fluconazolXringer lactato', 'C');
+    this.medMap.set('fluconazolXrocurônio', 'C');
+    this.medMap.set('fluconazolXsuccinilcolina', 'C');
+    this.medMap.set('fluconazolXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('fluconazolXsulfato de magnésio', 'C');
+    this.medMap.set('fluconazolXtigeciclina', 'C');
+    this.medMap.set('fluconazolXvancomicina', 'C');
+    this.medMap.set('fluconazolXVASopressina', 'C');
+    this.medMap.set('fluconazolXvoriconazol', 'C');
+    this.medMap.set('fluconazolXzidovudina', 'C');
+
+    this.medMap.set('flumazenilXheparina', 'C');
+    this.medMap.set('flumazenilXlidocaína', 'C');
+    this.medMap.set('flumazenilXranitidina', 'C');
+    this.medMap.set('flumazenilXringer lactato', 'C');
+
+    this.medMap.set('fosfato de potássioXgluconato de cálcio', 'I');
+    this.medMap.set('fosfato de potássioXlinezolida', 'C');
+    this.medMap.set('fosfato de potássioXmetoclopramida', 'C');
+    this.medMap.set('fosfato de potássioXmetronidazol', 'C');
+    this.medMap.set('fosfato de potássioXmilrinona', 'C');
+    this.medMap.set('fosfato de potássioXnaloxona', 'C');
+    this.medMap.set('fosfato de potássioXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('fosfato de potássioXocitocina', 'C');
+    this.medMap.set('fosfato de potássioXoctreotida', 'C');
+    this.medMap.set('fosfato de potássioXondansetrona', 'C');
+    this.medMap.set('fosfato de potássioXpamidronato', 'C');
+    this.medMap.set('fosfato de potássioXpancurônio', 'C');
+    this.medMap.set('fosfato de potássioXpiperacilina-tazobactam', 'C');
+    this.medMap.set('fosfato de potássioXringer lactato', 'C');
+    this.medMap.set('fosfato de potássioXrocurônio', 'I');
+    this.medMap.set('fosfato de potássioXtigeciclina', 'C');
+    this.medMap.set('fosfato de potássioXVASopressina', 'C');
+    this.medMap.set('fosfato de potássioXvoriconazol', 'C');
+
+    this.medMap.set('furosemidaXganciclovir', 'C');
+    this.medMap.set('furosemidaXgentamicina', 'V');
+    this.medMap.set('furosemidaXgluconato de cálcio', 'C');
+    this.medMap.set('furosemidaXhaloperidol', 'I');
+    this.medMap.set('furosemidaXheparina', 'V');
+    this.medMap.set('furosemidaXhidralazina', 'V');
+    this.medMap.set('furosemidaXhidrocortisona', 'C');
+    this.medMap.set('furosemidaXhioscina', 'C');
+    this.medMap.set('furosemidaXimipenem-cilastatina', 'C');
+    this.medMap.set('furosemidaXlevofloxacino', 'I');
+    this.medMap.set('furosemidaXlidocaína', 'C');
+    this.medMap.set('furosemidaXlinezolida', 'C');
+    this.medMap.set('furosemidaXmanitol', 'C');
+    this.medMap.set('furosemidaXmeropenem', 'C');
+    this.medMap.set('furosemidaXmetilprednisolona', 'C');
+    this.medMap.set('furosemidaXmetoclopramida', 'I');
+    this.medMap.set('furosemidaXmetoprolol', 'C');
+    this.medMap.set('furosemidaXmetronidazol', 'C');
+    this.medMap.set('furosemidaXmidazolam', 'V');
+    this.medMap.set('furosemidaXmilrinona', 'I');
+    this.medMap.set('furosemidaXmorfina', 'V');
+    this.medMap.set('furosemidaXnaloxona', 'C');
+    this.medMap.set('furosemidaXnitroGLICERINA', 'V');
+    this.medMap.set('furosemidaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('furosemidaXnoradrenalina', 'V');
+    this.medMap.set('furosemidaXocitocina', 'C');
+    this.medMap.set('furosemidaXoctreotida', 'C');
+    this.medMap.set('furosemidaXondansetrona', 'I');
+    this.medMap.set('furosemidaXoxacilina', 'C');
+    this.medMap.set('furosemidaXpamidronato', 'C');
+    this.medMap.set('furosemidaXpancurônio', 'I');
+    this.medMap.set('furosemidaXpenicilina G potássica', 'C');
+    this.medMap.set('furosemidaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('furosemidaXpolivitamínico', 'C');
+    this.medMap.set('furosemidaXpropofol', 'C');
+    this.medMap.set('furosemidaXprotamina', 'I');
+    this.medMap.set('furosemidaXranitidina', 'C');
+    this.medMap.set('furosemidaXremifentanil', 'V');
+    this.medMap.set('furosemidaXringer lactato', 'C');
+    this.medMap.set('furosemidaXrocurônio', 'I');
+    this.medMap.set('furosemidaXsuccinilcolina', 'C');
+    this.medMap.set('furosemidaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('furosemidaXsulfato de magnésio', 'V');
+    this.medMap.set('furosemidaXtiamina', 'I');
+    this.medMap.set('furosemidaXtigeciclina', 'C');
+    this.medMap.set('furosemidaXtiopental', 'V');
+    this.medMap.set('furosemidaXvancomicina', 'I');
+    this.medMap.set('furosemidaXVASopressina', 'C');
+    this.medMap.set('furosemidaXvoriconazol', 'C');
+
+    this.medMap.set('ganciclovirXgentamicina', 'I');
+    this.medMap.set('ganciclovirXgluconato de cálcio', 'C');
+    this.medMap.set('ganciclovirXhaloperidol', 'I');
+    this.medMap.set('ganciclovirXheparina', 'C');
+    this.medMap.set('ganciclovirXhidralazina', 'I');
+    this.medMap.set('ganciclovirXhidrocortisona', 'I');
+    this.medMap.set('ganciclovirXimipenem-cilastatina', 'I');
+    this.medMap.set('ganciclovirXinsulina regular', 'C');
+    this.medMap.set('ganciclovirXlevofloxacino', 'I');
+    this.medMap.set('ganciclovirXlidocaína', 'I');
+    this.medMap.set('ganciclovirXlinezolida', 'C');
+    this.medMap.set('ganciclovirXmanitol', 'C');
+    this.medMap.set('ganciclovirXmetilprednisolona', 'I');
+    this.medMap.set('ganciclovirXmetoclopramida', 'I');
+    this.medMap.set('ganciclovirXmetoprolol', 'C');
+    this.medMap.set('ganciclovirXmetronidazol', 'I');
+    this.medMap.set('ganciclovirXmidazolam', 'I');
+    this.medMap.set('ganciclovirXmilrinona', 'C');
+    this.medMap.set('ganciclovirXmorfina', 'I');
+    this.medMap.set('ganciclovirXnaloxona', 'C');
+    this.medMap.set('ganciclovirXnitroGLICERINA', 'C');
+    this.medMap.set('ganciclovirXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('ganciclovirXnoradrenalina', 'I');
+    this.medMap.set('ganciclovirXocitocina', 'C');
+    this.medMap.set('ganciclovirXoctreotida', 'C');
+    this.medMap.set('ganciclovirXondansetrona', 'I');
+    this.medMap.set('ganciclovirXoxacilina', 'I');
+    this.medMap.set('ganciclovirXpamidronato', 'C');
+    this.medMap.set('ganciclovirXpancurônio', 'C');
+    this.medMap.set('ganciclovirXpenicilina G potássica', 'I');
+    this.medMap.set('ganciclovirXpiperacilina-tazobactam', 'I');
+    this.medMap.set('ganciclovirXpolimixina B', 'C');
+    this.medMap.set('ganciclovirXpolivitamínico', 'I');
+    this.medMap.set('ganciclovirXprometazina', 'I');
+    this.medMap.set('ganciclovirXprotamina', 'C');
+    this.medMap.set('ganciclovirXranitidina', 'C');
+    this.medMap.set('ganciclovirXremifentanil', 'C');
+    this.medMap.set('ganciclovirXringer lactato', 'C');
+    this.medMap.set('ganciclovirXrocurônio', 'C');
+    this.medMap.set('ganciclovirXsuccinilcolina', 'I');
+    this.medMap.set('ganciclovirXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ganciclovirXsulfato de magnésio', 'I');
+    this.medMap.set('ganciclovirXtiamina', 'I');
+    this.medMap.set('ganciclovirXtigeciclina', 'C');
+    this.medMap.set('ganciclovirXvancomicina', 'I');
+    this.medMap.set('ganciclovirXVASopressina', 'C');
+    this.medMap.set('ganciclovirXvoriconazol', 'C');
+
+    this.medMap.set('gentamicinaXgluconato de cálcio', 'C');
+    this.medMap.set('gentamicinaXheparina', 'I');
+    this.medMap.set('gentamicinaXhidrocortisona', 'V');
+    this.medMap.set('gentamicinaXimipenem-cilastatina', 'C');
+    this.medMap.set('gentamicinaXinsulina regular', 'I');
+    this.medMap.set('gentamicinaXlevofloxacino', 'C');
+    this.medMap.set('gentamicinaXlidocaína', 'C');
+    this.medMap.set('gentamicinaXlinezolida', 'C');
+    this.medMap.set('gentamicinaXmanitol', 'C');
+    this.medMap.set('gentamicinaXmeropenem', 'C');
+    this.medMap.set('gentamicinaXmetilprednisolona', 'C');
+    this.medMap.set('gentamicinaXmetoclopramida', 'C');
+    this.medMap.set('gentamicinaXmetoprolol', 'C');
+    this.medMap.set('gentamicinaXmetronidazol', 'C');
+    this.medMap.set('gentamicinaXmidazolam', 'C');
+    this.medMap.set('gentamicinaXmilrinona', 'C');
+    this.medMap.set('gentamicinaXmorfina', 'C');
+    this.medMap.set('gentamicinaXnaloxona', 'C');
+    this.medMap.set('gentamicinaXnitroGLICERINA', 'C');
+    this.medMap.set('gentamicinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('gentamicinaXnoradrenalina', 'C');
+    this.medMap.set('gentamicinaXocitocina', 'C');
+    this.medMap.set('gentamicinaXoctreotida', 'C');
+    this.medMap.set('gentamicinaXondansetrona', 'C');
+    this.medMap.set('gentamicinaXoxacilina', 'I');
+    this.medMap.set('gentamicinaXpamidronato', 'C');
+    this.medMap.set('gentamicinaXpancurônio', 'C');
+    this.medMap.set('gentamicinaXpenicilina G potássica', 'C');
+    this.medMap.set('gentamicinaXpolimixina B', 'C');
+    this.medMap.set('gentamicinaXpolivitamínico', 'C');
+    this.medMap.set('gentamicinaXprometazina', 'C');
+    this.medMap.set('gentamicinaXpropofol', 'I');
+    this.medMap.set('gentamicinaXprotamina', 'C');
+    this.medMap.set('gentamicinaXranitidina', 'C');
+    this.medMap.set('gentamicinaXremifentanil', 'C');
+    this.medMap.set('gentamicinaXringer lactato', 'C');
+    this.medMap.set('gentamicinaXrocurônio', 'C');
+    this.medMap.set('gentamicinaXsalbutamol', 'C');
+    this.medMap.set('gentamicinaXsuccinilcolina', 'C');
+    this.medMap.set('gentamicinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('gentamicinaXsulfato de magnésio', 'C');
+    this.medMap.set('gentamicinaXtiamina', 'C');
+    this.medMap.set('gentamicinaXtigeciclina', 'C');
+    this.medMap.set('gentamicinaXvancomicina', 'C');
+    this.medMap.set('gentamicinaXVASopressina', 'C');
+    this.medMap.set('gentamicinaXvoriconazol', 'C');
+    this.medMap.set('gentamicinaXzidovudina', 'C');
+
+    this.medMap.set('gluconato de cálcioXheparina', 'C');
+    this.medMap.set('gluconato de cálcioXimipenem-cilastatina', 'V');
+    this.medMap.set('gluconato de cálcioXinsulina regular', 'C');
+    this.medMap.set('gluconato de cálcioXlevofloxacino', 'C');
+    this.medMap.set('gluconato de cálcioXlidocaína', 'C');
+    this.medMap.set('gluconato de cálcioXlinezolida', 'C');
+    this.medMap.set('gluconato de cálcioXmanitol', 'C');
+    this.medMap.set('gluconato de cálcioXmetilprednisolona', 'I');
+    this.medMap.set('gluconato de cálcioXmetoclopramida', 'C');
+    this.medMap.set('gluconato de cálcioXmetoprolol', 'C');
+    this.medMap.set('gluconato de cálcioXmetronidazol', 'C');
+    this.medMap.set('gluconato de cálcioXmidazolam', 'C');
+    this.medMap.set('gluconato de cálcioXmilrinona', 'C');
+    this.medMap.set('gluconato de cálcioXmorfina', 'C');
+    this.medMap.set('gluconato de cálcioXnaloxona', 'C');
+    this.medMap.set('gluconato de cálcioXnitroGLICERINA', 'C');
+    this.medMap.set('gluconato de cálcioXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('gluconato de cálcioXnoradrenalina', 'C');
+    this.medMap.set('gluconato de cálcioXocitocina', 'C');
+    this.medMap.set('gluconato de cálcioXoctreotida', 'C');
+    this.medMap.set('gluconato de cálcioXondansetrona', 'C');
+    this.medMap.set('gluconato de cálcioXoxacilina', 'I');
+    this.medMap.set('gluconato de cálcioXpancurônio', 'C');
+    this.medMap.set('gluconato de cálcioXpenicilina G potássica', 'C');
+    this.medMap.set('gluconato de cálcioXpiperacilina-tazobactam', 'C');
+    this.medMap.set('gluconato de cálcioXpolimixina B', 'C');
+    this.medMap.set('gluconato de cálcioXpolivitamínico', 'C');
+    this.medMap.set('gluconato de cálcioXprometazina', 'C');
+    this.medMap.set('gluconato de cálcioXpropofol', 'C');
+    this.medMap.set('gluconato de cálcioXprotamina', 'C');
+    this.medMap.set('gluconato de cálcioXranitidina', 'C');
+    this.medMap.set('gluconato de cálcioXremifentanil', 'C');
+    this.medMap.set('gluconato de cálcioXringer lactato', 'C');
+    this.medMap.set('gluconato de cálcioXrocurônio', 'C');
+    this.medMap.set('gluconato de cálcioXsalbutamol', 'C');
+    this.medMap.set('gluconato de cálcioXsuccinilcolina', 'C');
+    this.medMap.set('gluconato de cálcioXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('gluconato de cálcioXsulfato de magnésio', 'C');
+    this.medMap.set('gluconato de cálcioXtiamina', 'C');
+    this.medMap.set('gluconato de cálcioXtigeciclina', 'C');
+    this.medMap.set('gluconato de cálcioXvancomicina', 'C');
+    this.medMap.set('gluconato de cálcioXVASopressina', 'C');
+    this.medMap.set('gluconato de cálcioXvoriconazol', 'C');
+
+    this.medMap.set('haloperidolXheparina', 'I');
+    this.medMap.set('haloperidolXhidralazina', 'I');
+    this.medMap.set('haloperidolXhidrocortisona', 'I');
+    this.medMap.set('haloperidolXhioscina', 'C');
+    this.medMap.set('haloperidolXimipenem-cilastatina', 'I');
+    this.medMap.set('haloperidolXlevofloxacino', 'C');
+    this.medMap.set('haloperidolXlidocaína', 'V');
+    this.medMap.set('haloperidolXlinezolida', 'C');
+    this.medMap.set('haloperidolXmetilprednisolona', 'I');
+    this.medMap.set('haloperidolXmetronidazol', 'C');
+    this.medMap.set('haloperidolXmidazolam', 'V');
+    this.medMap.set('haloperidolXmilrinona', 'C');
+    this.medMap.set('haloperidolXnitroPRUSSIATO de sódio', 'V');
+    this.medMap.set('haloperidolXnoradrenalina', 'V');
+    this.medMap.set('haloperidolXoctreotida', 'C');
+    this.medMap.set('haloperidolXoxacilina', 'I');
+    this.medMap.set('haloperidolXpamidronato', 'C');
+    this.medMap.set('haloperidolXpancurônio', 'C');
+    this.medMap.set('haloperidolXpenicilina G potássica', 'I');
+    this.medMap.set('haloperidolXpiperacilina-tazobactam', 'I');
+    this.medMap.set('haloperidolXpropofol', 'C');
+    this.medMap.set('haloperidolXprotamina', 'V');
+    this.medMap.set('haloperidolXremifentanil', 'C');
+    this.medMap.set('haloperidolXrocurônio', 'C');
+    this.medMap.set('haloperidolXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('haloperidolXsulfato de magnésio', 'I');
+    this.medMap.set('haloperidolXtigeciclina', 'C');
+    this.medMap.set('haloperidolXtramadol', 'C');
+    this.medMap.set('haloperidolXVASopressina', 'V');
+    this.medMap.set('haloperidolXvoriconazol', 'C');
+
+    this.medMap.set('heparinaXhidralazina', 'V');
+    this.medMap.set('heparinaXhidrocortisona', 'C');
+    this.medMap.set('heparinaXimipenem-cilastatina', 'C');
+    this.medMap.set('heparinaXinsulina regular', 'V');
+    this.medMap.set('heparinaXlevofloxacino', 'I');
+    this.medMap.set('heparinaXlidocaína', 'C');
+    this.medMap.set('heparinaXlinezolida', 'C');
+    this.medMap.set('heparinaXmanitol', 'C');
+    this.medMap.set('heparinaXmeropenem', 'C');
+    this.medMap.set('heparinaXmetoclopramida', 'C');
+    this.medMap.set('heparinaXmetoprolol', 'C');
+    this.medMap.set('heparinaXmetronidazol', 'C');
+    this.medMap.set('heparinaXmidazolam', 'C');
+    this.medMap.set('heparinaXmilrinona', 'C');
+    this.medMap.set('heparinaXmorfina', 'C');
+    this.medMap.set('heparinaXnaloxona', 'C');
+    this.medMap.set('heparinaXneostigmina', 'C');
+    this.medMap.set('heparinaXnitroGLICERINA', 'C');
+    this.medMap.set('heparinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('heparinaXnoradrenalina', 'C');
+    this.medMap.set('heparinaXocitocina', 'C');
+    this.medMap.set('heparinaXoctreotida', 'C');
+    this.medMap.set('heparinaXondansetrona', 'C');
+    this.medMap.set('heparinaXoxacilina', 'C');
+    this.medMap.set('heparinaXpamidronato', 'C');
+    this.medMap.set('heparinaXpancurônio', 'C');
+    this.medMap.set('heparinaXpenicilina G potássica', 'C');
+    this.medMap.set('heparinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('heparinaXpolimixina B', 'I');
+    this.medMap.set('heparinaXpolivitamínico', 'C');
+    this.medMap.set('heparinaXpropofol', 'C');
+    this.medMap.set('heparinaXprotamina', 'I');
+    this.medMap.set('heparinaXranitidina', 'C');
+    this.medMap.set('heparinaXremifentanil', 'C');
+    this.medMap.set('heparinaXringer lactato', 'C');
+    this.medMap.set('heparinaXrocurônio', 'C');
+    this.medMap.set('heparinaXsalbutamol', 'C');
+    this.medMap.set('heparinaXsuccinilcolina', 'C');
+    this.medMap.set('heparinaXsulfato de magnésio', 'C');
+    this.medMap.set('heparinaXtiamina', 'C');
+    this.medMap.set('heparinaXtigeciclina', 'C');
+    this.medMap.set('heparinaXtiopental', 'C');
+    this.medMap.set('heparinaXtramadol', 'I');
+    this.medMap.set('heparinaXVASopressina', 'C');
+    this.medMap.set('heparinaXvitaminas do complexo B', 'C');
+    this.medMap.set('heparinaXvoriconazol', 'C');
+    this.medMap.set('heparinaXzidovudina', 'C');
+
+    this.medMap.set('hidralazinaXimipenem-cilastatina', 'V');
+    this.medMap.set('hidralazinaXlidocaína', 'V');
+    this.medMap.set('hidralazinaXlinezolida', 'C');
+    this.medMap.set('hidralazinaXmetilprednisolona', 'I');
+    this.medMap.set('hidralazinaXmetoprolol', 'V');
+    this.medMap.set('hidralazinaXmetronidazol', 'C');
+    this.medMap.set('hidralazinaXmidazolam', 'V');
+    this.medMap.set('hidralazinaXmilrinona', 'C');
+    this.medMap.set('hidralazinaXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('hidralazinaXnoradrenalina', 'V');
+    this.medMap.set('hidralazinaXoctreotida', 'C');
+    this.medMap.set('hidralazinaXoxacilina', 'I');
+    this.medMap.set('hidralazinaXpamidronato', 'C');
+    this.medMap.set('hidralazinaXpancurônio', 'C');
+    this.medMap.set('hidralazinaXpiperacilina-tazobactam', 'I');
+    this.medMap.set('hidralazinaXpolivitamínico', 'I');
+    this.medMap.set('hidralazinaXprotamina', 'V');
+    this.medMap.set('hidralazinaXranitidina', 'V');
+    this.medMap.set('hidralazinaXringer lactato', 'V');
+    this.medMap.set('hidralazinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('hidralazinaXsulfato de magnésio', 'V');
+    this.medMap.set('hidralazinaXtigeciclina', 'I');
+    this.medMap.set('hidralazinaXVASopressina', 'V');
+    this.medMap.set('hidralazinaXvoriconazol', 'C');
+
+    this.medMap.set('hidrocortisonaXimipenem-cilastatina', 'C');
+    this.medMap.set('hidrocortisonaXinsulina regular', 'C');
+    this.medMap.set('hidrocortisonaXlevofloxacino', 'C');
+    this.medMap.set('hidrocortisonaXlidocaína', 'C');
+    this.medMap.set('hidrocortisonaXlinezolida', 'C');
+    this.medMap.set('hidrocortisonaXmanitol', 'C');
+    this.medMap.set('hidrocortisonaXmetilprednisolona', 'V');
+    this.medMap.set('hidrocortisonaXmetoclopramida', 'C');
+    this.medMap.set('hidrocortisonaXmetoprolol', 'C');
+    this.medMap.set('hidrocortisonaXmetronidazol', 'C');
+    this.medMap.set('hidrocortisonaXmidazolam', 'I');
+    this.medMap.set('hidrocortisonaXmilrinona', 'C');
+    this.medMap.set('hidrocortisonaXmorfina', 'C');
+    this.medMap.set('hidrocortisonaXnaloxona', 'C');
+    this.medMap.set('hidrocortisonaXneostigmina', 'C');
+    this.medMap.set('hidrocortisonaXnitroGLICERINA', 'C');
+    this.medMap.set('hidrocortisonaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('hidrocortisonaXnoradrenalina', 'C');
+    this.medMap.set('hidrocortisonaXocitocina', 'C');
+    this.medMap.set('hidrocortisonaXoctreotida', 'C');
+    this.medMap.set('hidrocortisonaXondansetrona', 'C');
+    this.medMap.set('hidrocortisonaXoxacilina', 'C');
+    this.medMap.set('hidrocortisonaXpamidronato', 'C');
+    this.medMap.set('hidrocortisonaXpancurônio', 'C');
+    this.medMap.set('hidrocortisonaXpenicilina G potássica', 'C');
+    this.medMap.set('hidrocortisonaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('hidrocortisonaXpolivitamínico', 'C');
+    this.medMap.set('hidrocortisonaXpropofol', 'C');
+    this.medMap.set('hidrocortisonaXprotamina', 'I');
+    this.medMap.set('hidrocortisonaXranitidina', 'C');
+    this.medMap.set('hidrocortisonaXremifentanil', 'C');
+    this.medMap.set('hidrocortisonaXringer lactato', 'C');
+    this.medMap.set('hidrocortisonaXrocurônio', 'I');
+    this.medMap.set('hidrocortisonaXsalbutamol', 'C');
+    this.medMap.set('hidrocortisonaXsuccinilcolina', 'C');
+    this.medMap.set('hidrocortisonaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('hidrocortisonaXtiamina', 'I');
+    this.medMap.set('hidrocortisonaXtigeciclina', 'C');
+    this.medMap.set('hidrocortisonaXVASopressina', 'C');
+    this.medMap.set('hidrocortisonaXvoriconazol', 'C');
+
+    this.medMap.set('hioscinaXmetoclopramida', 'C');
+    this.medMap.set('hioscinaXpropofol', 'C');
+    this.medMap.set('hioscinaXtramadol', 'C');
+
+    this.medMap.set('imipenem-cilastatinaXinsulina regular', 'C');
+    this.medMap.set('imipenem-cilastatinaXlevofloxacino', 'C');
+    this.medMap.set('imipenem-cilastatinaXlidocaína', 'C');
+    this.medMap.set('imipenem-cilastatinaXlinezolida', 'C');
+    this.medMap.set('imipenem-cilastatinaXmanitol', 'I');
+    this.medMap.set('imipenem-cilastatinaXmetilprednisolona', 'C');
+    this.medMap.set('imipenem-cilastatinaXmetoclopramida', 'C');
+    this.medMap.set('imipenem-cilastatinaXmetoprolol', 'C');
+    this.medMap.set('imipenem-cilastatinaXmetronidazol', 'C');
+    this.medMap.set('imipenem-cilastatinaXmidazolam', 'V');
+    this.medMap.set('imipenem-cilastatinaXmilrinona', 'I');
+    this.medMap.set('imipenem-cilastatinaXmorfina', 'C');
+    this.medMap.set('imipenem-cilastatinaXnaloxona', 'C');
+    this.medMap.set('imipenem-cilastatinaXnitroGLICERINA', 'C');
+    this.medMap.set('imipenem-cilastatinaXnoradrenalina', 'C');
+    this.medMap.set('imipenem-cilastatinaXocitocina', 'C');
+    this.medMap.set('imipenem-cilastatinaXoctreotida', 'C');
+    this.medMap.set('imipenem-cilastatinaXondansetrona', 'C');
+    this.medMap.set('imipenem-cilastatinaXoxacilina', 'C');
+    this.medMap.set('imipenem-cilastatinaXpamidronato', 'C');
+    this.medMap.set('imipenem-cilastatinaXpancurônio', 'C');
+    this.medMap.set('imipenem-cilastatinaXpenicilina G potássica', 'C');
+    this.medMap.set('imipenem-cilastatinaXpolimixina B', 'C');
+    this.medMap.set('imipenem-cilastatinaXpolivitamínico', 'C');
+    this.medMap.set('imipenem-cilastatinaXpropofol', 'C');
+    this.medMap.set('imipenem-cilastatinaXprotamina', 'C');
+    this.medMap.set('imipenem-cilastatinaXranitidina', 'C');
+    this.medMap.set('imipenem-cilastatinaXremifentanil', 'C');
+    this.medMap.set('imipenem-cilastatinaXringer lactato', 'C');
+    this.medMap.set('imipenem-cilastatinaXrocurônio', 'C');
+    this.medMap.set('imipenem-cilastatinaXsuccinilcolina', 'C');
+    this.medMap.set('imipenem-cilastatinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('imipenem-cilastatinaXsulfato de magnésio', 'C');
+    this.medMap.set('imipenem-cilastatinaXtiamina', 'I');
+    this.medMap.set('imipenem-cilastatinaXtigeciclina', 'C');
+    this.medMap.set('imipenem-cilastatinaXVASopressina', 'C');
+    this.medMap.set('imipenem-cilastatinaXvoriconazol', 'C');
+    this.medMap.set('imipenem-cilastatinaXzidovudina', 'C');
+
+    this.medMap.set('insulina regularXlidocaína', 'C');
+    this.medMap.set('insulina regularXlinezolida', 'C');
+    this.medMap.set('insulina regularXmanitol', 'C');
+    this.medMap.set('insulina regularXmeropenem', 'C');
+    this.medMap.set('insulina regularXmetilprednisolona', 'C');
+    this.medMap.set('insulina regularXmetoclopramida', 'C');
+    this.medMap.set('insulina regularXmetoprolol', 'C');
+    this.medMap.set('insulina regularXmetronidazol', 'C');
+    this.medMap.set('insulina regularXmilrinona', 'C');
+    this.medMap.set('insulina regularXmorfina', 'V');
+    this.medMap.set('insulina regularXnaloxona', 'C');
+    this.medMap.set('insulina regularXnitroGLICERINA', 'C');
+    this.medMap.set('insulina regularXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('insulina regularXocitocina', 'V');
+    this.medMap.set('insulina regularXoctreotida', 'C');
+    this.medMap.set('insulina regularXoxacilina', 'C');
+    this.medMap.set('insulina regularXpamidronato', 'C');
+    this.medMap.set('insulina regularXpancurônio', 'C');
+    this.medMap.set('insulina regularXpenicilina G potássica', 'C');
+    this.medMap.set('insulina regularXpiperacilina-tazobactam', 'I');
+    this.medMap.set('insulina regularXpolimixina B', 'I');
+    this.medMap.set('insulina regularXprometazina', 'C');
+    this.medMap.set('insulina regularXpropofol', 'C');
+    this.medMap.set('insulina regularXprotamina', 'I');
+    this.medMap.set('insulina regularXremifentanil', 'C');
+    this.medMap.set('insulina regularXringer lactato', 'C');
+    this.medMap.set('insulina regularXrocurônio', 'I');
+    this.medMap.set('insulina regularXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('insulina regularXsulfato de magnésio', 'C');
+    this.medMap.set('insulina regularXtiamina', 'C');
+    this.medMap.set('insulina regularXtigeciclina', 'C');
+    this.medMap.set('insulina regularXvancomicina', 'C');
+    this.medMap.set('insulina regularXVASopressina', 'V');
+    this.medMap.set('insulina regularXvoriconazol', 'C');
+
+    this.medMap.set('levofloxacinoXlidocaína', 'C');
+    this.medMap.set('levofloxacinoXlinezolida', 'C');
+    this.medMap.set('levofloxacinoXmanitol', 'C');
+    this.medMap.set('levofloxacinoXmetilprednisolona', 'C');
+    this.medMap.set('levofloxacinoXmetoclopramida', 'C');
+    this.medMap.set('levofloxacinoXmetoprolol', 'C');
+    this.medMap.set('levofloxacinoXmetronidazol', 'C');
+    this.medMap.set('levofloxacinoXmidazolam', 'C');
+    this.medMap.set('levofloxacinoXmilrinona', 'C');
+    this.medMap.set('levofloxacinoXnaloxona', 'C');
+    this.medMap.set('levofloxacinoXnitroGLICERINA', 'I');
+    this.medMap.set('levofloxacinoXnitroPRUSSIATO de sódio', 'I');
+    this.medMap.set('levofloxacinoXocitocina', 'C');
+    this.medMap.set('levofloxacinoXoctreotida', 'C');
+    this.medMap.set('levofloxacinoXondansetrona', 'C');
+    this.medMap.set('levofloxacinoXoxacilina', 'C');
+    this.medMap.set('levofloxacinoXpamidronato', 'C');
+    this.medMap.set('levofloxacinoXpancurônio', 'C');
+    this.medMap.set('levofloxacinoXpenicilina G potássica', 'C');
+    this.medMap.set('levofloxacinoXpiperacilina-tazobactam', 'I');
+    this.medMap.set('levofloxacinoXprometazina', 'C');
+    this.medMap.set('levofloxacinoXpropofol', 'I');
+    this.medMap.set('levofloxacinoXranitidina', 'C');
+    this.medMap.set('levofloxacinoXremifentanil', 'C');
+    this.medMap.set('levofloxacinoXrocurônio', 'C');
+    this.medMap.set('levofloxacinoXsuccinilcolina', 'C');
+    this.medMap.set('levofloxacinoXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('levofloxacinoXtigeciclina', 'C');
+    this.medMap.set('levofloxacinoXtiopental', 'I');
+    this.medMap.set('levofloxacinoXvancomicina', 'C');
+    this.medMap.set('levofloxacinoXVASopressina', 'C');
+    this.medMap.set('levofloxacinoXvoriconazol', 'C');
+    this.medMap.set('levofloxacinoXzidovudina', 'C');
+
+    this.medMap.set('lidocaínaXlinezolida', 'C');
+    this.medMap.set('lidocaínaXmanitol', 'C');
+    this.medMap.set('lidocaínaXmetilprednisolona', 'C');
+    this.medMap.set('lidocaínaXmetoclopramida', 'C');
+    this.medMap.set('lidocaínaXmetronidazol', 'C');
+    this.medMap.set('lidocaínaXmidazolam', 'C');
+    this.medMap.set('lidocaínaXmilrinona', 'I');
+    this.medMap.set('lidocaínaXmorfina', 'C');
+    this.medMap.set('lidocaínaXnaloxona', 'C');
+    this.medMap.set('lidocaínaXnitroGLICERINA', 'C');
+    this.medMap.set('lidocaínaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('lidocaínaXnoradrenalina', 'C');
+    this.medMap.set('lidocaínaXocitocina', 'C');
+    this.medMap.set('lidocaínaXoctreotida', 'C');
+    this.medMap.set('lidocaínaXondansetrona', 'C');
+    this.medMap.set('lidocaínaXoxacilina', 'C');
+    this.medMap.set('lidocaínaXpamidronato', 'C');
+    this.medMap.set('lidocaínaXpancurônio', 'C');
+    this.medMap.set('lidocaínaXpenicilina G potássica', 'C');
+    this.medMap.set('lidocaínaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('lidocaínaXpolimixina B', 'C');
+    this.medMap.set('lidocaínaXpolivitamínico', 'C');
+    this.medMap.set('lidocaínaXprometazina', 'C');
+    this.medMap.set('lidocaínaXprotamina', 'C');
+    this.medMap.set('lidocaínaXranitidina', 'C');
+    this.medMap.set('lidocaínaXremifentanil', 'C');
+    this.medMap.set('lidocaínaXringer lactato', 'C');
+    this.medMap.set('lidocaínaXrocurônio', 'C');
+    this.medMap.set('lidocaínaXsuccinilcolina', 'C');
+    this.medMap.set('lidocaínaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('lidocaínaXsulfato de magnésio', 'C');
+    this.medMap.set('lidocaínaXtiamina', 'C');
+    this.medMap.set('lidocaínaXtigeciclina', 'C');
+    this.medMap.set('lidocaínaXtiopental', 'I');
+    this.medMap.set('lidocaínaXvancomicina', 'C');
+    this.medMap.set('lidocaínaXVASopressina', 'C');
+    this.medMap.set('lidocaínaXvoriconazol', 'C');
+
+    this.medMap.set('linezolidaXmanitol', 'C');
+    this.medMap.set('linezolidaXmeropenem', 'C');
+    this.medMap.set('linezolidaXmetilprednisolona', 'C');
+    this.medMap.set('linezolidaXmetoclopramida', 'C');
+    this.medMap.set('linezolidaXmetoprolol', 'C');
+    this.medMap.set('linezolidaXmetronidazol', 'C');
+    this.medMap.set('linezolidaXmidazolam', 'C');
+    this.medMap.set('linezolidaXmilrinona', 'C');
+    this.medMap.set('linezolidaXmorfina', 'C');
+    this.medMap.set('linezolidaXnaloxona', 'C');
+    this.medMap.set('linezolidaXnitroGLICERINA', 'C');
+    this.medMap.set('linezolidaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('linezolidaXnoradrenalina', 'C');
+    this.medMap.set('linezolidaXocitocina', 'C');
+    this.medMap.set('linezolidaXoctreotida', 'C');
+    this.medMap.set('linezolidaXondansetrona', 'C');
+    this.medMap.set('linezolidaXpamidronato', 'C');
+    this.medMap.set('linezolidaXpancurônio', 'C');
+    this.medMap.set('linezolidaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('linezolidaXpolimixina B', 'C');
+    this.medMap.set('linezolidaXprometazina', 'C');
+    this.medMap.set('linezolidaXranitidina', 'C');
+    this.medMap.set('linezolidaXremifentanil', 'C');
+    this.medMap.set('linezolidaXringer lactato', 'C');
+    this.medMap.set('linezolidaXrocurônio', 'C');
+    this.medMap.set('linezolidaXsuccinilcolina', 'C');
+    this.medMap.set('linezolidaXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('linezolidaXsulfato de magnésio', 'C');
+    this.medMap.set('linezolidaXtigeciclina', 'C');
+    this.medMap.set('linezolidaXtiopental', 'I');
+    this.medMap.set('linezolidaXvancomicina', 'C');
+    this.medMap.set('linezolidaXVASopressina', 'C');
+    this.medMap.set('linezolidaXvoriconazol', 'C');
+    this.medMap.set('linezolidaXzidovudina', 'C');
+
+    this.medMap.set('manitolXmetilprednisolona', 'C');
+    this.medMap.set('manitolXmetoclopramida', 'C');
+    this.medMap.set('manitolXmetoprolol', 'C');
+    this.medMap.set('manitolXmetronidazol', 'C');
+    this.medMap.set('manitolXmidazolam', 'C');
+    this.medMap.set('manitolXmilrinona', 'C');
+    this.medMap.set('manitolXmorfina', 'C');
+    this.medMap.set('manitolXnaloxona', 'C');
+    this.medMap.set('manitolXnitroGLICERINA', 'C');
+    this.medMap.set('manitolXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('manitolXnoradrenalina', 'C');
+    this.medMap.set('manitolXocitocina', 'C');
+    this.medMap.set('manitolXoctreotida', 'C');
+    this.medMap.set('manitolXondansetrona', 'C');
+    this.medMap.set('manitolXoxacilina', 'C');
+    this.medMap.set('manitolXpamidronato', 'C');
+    this.medMap.set('manitolXpancurônio', 'C');
+    this.medMap.set('manitolXpenicilina G potássica', 'C');
+    this.medMap.set('manitolXpiperacilina-tazobactam', 'C');
+    this.medMap.set('manitolXpolimixina B', 'C');
+    this.medMap.set('manitolXpolivitamínico', 'C');
+    this.medMap.set('manitolXprometazina', 'C');
+    this.medMap.set('manitolXpropofol', 'C');
+    this.medMap.set('manitolXprotamina', 'C');
+    this.medMap.set('manitolXranitidina', 'C');
+    this.medMap.set('manitolXremifentanil', 'C');
+    this.medMap.set('manitolXringer lactato', 'C');
+    this.medMap.set('manitolXrocurônio', 'C');
+    this.medMap.set('manitolXsuccinilcolina', 'C');
+    this.medMap.set('manitolXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('manitolXsulfato de magnésio', 'C');
+    this.medMap.set('manitolXtiamina', 'C');
+    this.medMap.set('manitolXtigeciclina', 'C');
+    this.medMap.set('manitolXtramadol', 'C');
+    this.medMap.set('manitolXvancomicina', 'C');
+    this.medMap.set('manitolXVASopressina', 'C');
+    this.medMap.set('manitolXvoriconazol', 'C');
+
+    this.medMap.set('meropenemXmetoclopramida', 'C');
+    this.medMap.set('meropenemXmetoprolol', 'C');
+    this.medMap.set('meropenemXmetronidazol', 'C');
+    this.medMap.set('meropenemXmidazolam', 'I');
+    this.medMap.set('meropenemXmilrinona', 'C');
+    this.medMap.set('meropenemXmorfina', 'C');
+    this.medMap.set('meropenemXnaloxona', 'C');
+    this.medMap.set('meropenemXnoradrenalina', 'C');
+    this.medMap.set('meropenemXocitocina', 'C');
+    this.medMap.set('meropenemXoctreotida', 'C');
+    this.medMap.set('meropenemXpamidronato', 'C');
+    this.medMap.set('meropenemXpancurônio', 'C');
+    this.medMap.set('meropenemXranitidina', 'C');
+    this.medMap.set('meropenemXrocurônio', 'C');
+    this.medMap.set('meropenemXsulfato de magnésio', 'C');
+    this.medMap.set('meropenemXtigeciclina', 'C');
+    this.medMap.set('meropenemXvancomicina', 'C');
+    this.medMap.set('meropenemXVASopressina', 'C');
+    this.medMap.set('meropenemXvoriconazol', 'C');
+
+    this.medMap.set('metilprednisolonaXmetoclopramida', 'C');
+    this.medMap.set('metilprednisolonaXmetoprolol', 'C');
+    this.medMap.set('metilprednisolonaXmetronidazol', 'C');
+    this.medMap.set('metilprednisolonaXmidazolam', 'V');
+    this.medMap.set('metilprednisolonaXmilrinona', 'C');
+    this.medMap.set('metilprednisolonaXmorfina', 'C');
+    this.medMap.set('metilprednisolonaXnaloxona', 'C');
+    this.medMap.set('metilprednisolonaXnitroGLICERINA', 'C');
+    this.medMap.set('metilprednisolonaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('metilprednisolonaXnoradrenalina', 'C');
+    this.medMap.set('metilprednisolonaXocitocina', 'C');
+    this.medMap.set('metilprednisolonaXoctreotida', 'C');
+    this.medMap.set('metilprednisolonaXoxacilina', 'C');
+    this.medMap.set('metilprednisolonaXpamidronato', 'C');
+    this.medMap.set('metilprednisolonaXpancurônio', 'C');
+    this.medMap.set('metilprednisolonaXpenicilina G potássica', 'C');
+    this.medMap.set('metilprednisolonaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('metilprednisolonaXpolimixina B', 'C');
+    this.medMap.set('metilprednisolonaXpolivitamínico', 'C');
+    this.medMap.set('metilprednisolonaXprometazina', 'I');
+    this.medMap.set('metilprednisolonaXpropofol', 'I');
+    this.medMap.set('metilprednisolonaXprotamina', 'I');
+    this.medMap.set('metilprednisolonaXranitidina', 'C');
+    this.medMap.set('metilprednisolonaXremifentanil', 'C');
+    this.medMap.set('metilprednisolonaXringer lactato', 'C');
+    this.medMap.set('metilprednisolonaXrocurônio', 'I');
+    this.medMap.set('metilprednisolonaXsuccinilcolina', 'C');
+    this.medMap.set('metilprednisolonaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('metilprednisolonaXsulfato de magnésio', 'I');
+    this.medMap.set('metilprednisolonaXtiamina', 'I');
+    this.medMap.set('metilprednisolonaXvancomicina', 'I');
+    this.medMap.set('metilprednisolonaXVASopressina', 'C');
+    this.medMap.set('metilprednisolonaXvoriconazol', 'C');
+
+    this.medMap.set('metoclopramidaXmetoprolol', 'C');
+    this.medMap.set('metoclopramidaXmetronidazol', 'C');
+    this.medMap.set('metoclopramidaXmidazolam', 'C');
+    this.medMap.set('metoclopramidaXmilrinona', 'C');
+    this.medMap.set('metoclopramidaXmorfina', 'C');
+    this.medMap.set('metoclopramidaXnaloxona', 'C');
+    this.medMap.set('metoclopramidaXnitroGLICERINA', 'C');
+    this.medMap.set('metoclopramidaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('metoclopramidaXnoradrenalina', 'C');
+    this.medMap.set('metoclopramidaXocitocina', 'C');
+    this.medMap.set('metoclopramidaXoctreotida', 'C');
+    this.medMap.set('metoclopramidaXondansetrona', 'C');
+    this.medMap.set('metoclopramidaXoxacilina', 'C');
+    this.medMap.set('metoclopramidaXpamidronato', 'C');
+    this.medMap.set('metoclopramidaXpancurônio', 'C');
+    this.medMap.set('metoclopramidaXpenicilina G potássica', 'C');
+    this.medMap.set('metoclopramidaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('metoclopramidaXpolimixina B', 'C');
+    this.medMap.set('metoclopramidaXpolivitamínico', 'C');
+    this.medMap.set('metoclopramidaXprometazina', 'C');
+    this.medMap.set('metoclopramidaXpropofol', 'I');
+    this.medMap.set('metoclopramidaXprotamina', 'C');
+    this.medMap.set('metoclopramidaXranitidina', 'C');
+    this.medMap.set('metoclopramidaXremifentanil', 'C');
+    this.medMap.set('metoclopramidaXringer lactato', 'C');
+    this.medMap.set('metoclopramidaXrocurônio', 'C');
+    this.medMap.set('metoclopramidaXsuccinilcolina', 'C');
+    this.medMap.set('metoclopramidaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('metoclopramidaXsulfato de magnésio', 'C');
+    this.medMap.set('metoclopramidaXtiamina', 'C');
+    this.medMap.set('metoclopramidaXtigeciclina', 'C');
+    this.medMap.set('metoclopramidaXtramadol', 'C');
+    this.medMap.set('metoclopramidaXvancomicina', 'C');
+    this.medMap.set('metoclopramidaXVASopressina', 'C');
+    this.medMap.set('metoclopramidaXvoriconazol', 'C');
+    this.medMap.set('metoclopramidaXzidovudina', 'C');
+
+    this.medMap.set('metoprololXmetronidazol', 'C');
+    this.medMap.set('metoprololXmidazolam', 'C');
+    this.medMap.set('metoprololXmilrinona', 'C');
+    this.medMap.set('metoprololXmorfina', 'C');
+    this.medMap.set('metoprololXnaloxona', 'C');
+    this.medMap.set('metoprololXnitroGLICERINA', 'V');
+    this.medMap.set('metoprololXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('metoprololXnoradrenalina', 'C');
+    this.medMap.set('metoprololXocitocina', 'C');
+    this.medMap.set('metoprololXoctreotida', 'C');
+    this.medMap.set('metoprololXondansetrona', 'C');
+    this.medMap.set('metoprololXoxacilina', 'C');
+    this.medMap.set('metoprololXpamidronato', 'C');
+    this.medMap.set('metoprololXpancurônio', 'C');
+    this.medMap.set('metoprololXpenicilina G potássica', 'C');
+    this.medMap.set('metoprololXpiperacilina-tazobactam', 'C');
+    this.medMap.set('metoprololXpolimixina B', 'C');
+    this.medMap.set('metoprololXpolivitamínico', 'C');
+    this.medMap.set('metoprololXprometazina', 'C');
+    this.medMap.set('metoprololXprotamina', 'C');
+    this.medMap.set('metoprololXranitidina', 'C');
+    this.medMap.set('metoprololXringer lactato', 'C');
+    this.medMap.set('metoprololXrocurônio', 'C');
+    this.medMap.set('metoprololXsuccinilcolina', 'C');
+    this.medMap.set('metoprololXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('metoprololXsulfato de magnésio', 'C');
+    this.medMap.set('metoprololXtiamina', 'C');
+    this.medMap.set('metoprololXtigeciclina', 'C');
+    this.medMap.set('metoprololXvancomicina', 'C');
+    this.medMap.set('metoprololXVASopressina', 'C');
+    this.medMap.set('metoprololXvoriconazol', 'C');
+
+    this.medMap.set('metronidazolXmidazolam', 'C');
+    this.medMap.set('metronidazolXmilrinona', 'C');
+    this.medMap.set('metronidazolXmorfina', 'C');
+    this.medMap.set('metronidazolXnaloxona', 'C');
+    this.medMap.set('metronidazolXnitroGLICERINA', 'C');
+    this.medMap.set('metronidazolXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('metronidazolXnoradrenalina', 'C');
+    this.medMap.set('metronidazolXocitocina', 'C');
+    this.medMap.set('metronidazolXoctreotida', 'C');
+    this.medMap.set('metronidazolXondansetrona', 'C');
+    this.medMap.set('metronidazolXpamidronato', 'C');
+    this.medMap.set('metronidazolXpancurônio', 'C');
+    this.medMap.set('metronidazolXpiperacilina-tazobactam', 'C');
+    this.medMap.set('metronidazolXpolimixina B', 'C');
+    this.medMap.set('metronidazolXpolivitamínico', 'C');
+    this.medMap.set('metronidazolXprometazina', 'C');
+    this.medMap.set('metronidazolXpropofol', 'I');
+    this.medMap.set('metronidazolXranitidina', 'C');
+    this.medMap.set('metronidazolXremifentanil', 'C');
+    this.medMap.set('metronidazolXringer lactato', 'C');
+    this.medMap.set('metronidazolXrocurônio', 'C');
+    this.medMap.set('metronidazolXsalbutamol', 'C');
+    this.medMap.set('metronidazolXsuccinilcolina', 'C');
+    this.medMap.set('metronidazolXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('metronidazolXsulfato de magnésio', 'C');
+    this.medMap.set('metronidazolXtigeciclina', 'C');
+    this.medMap.set('metronidazolXtiopental', 'C');
+    this.medMap.set('metronidazolXvancomicina', 'C');
+    this.medMap.set('metronidazolXVASopressina', 'C');
+    this.medMap.set('metronidazolXvoriconazol', 'C');
+    this.medMap.set('metronidazolXzidovudina', 'C');
+
+    this.medMap.set('midazolamXmilrinona', 'C');
+    this.medMap.set('midazolamXmorfina', 'C');
+    this.medMap.set('midazolamXnaloxona', 'C');
+    this.medMap.set('midazolamXnitroGLICERINA', 'C');
+    this.medMap.set('midazolamXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('midazolamXnoradrenalina', 'C');
+    this.medMap.set('midazolamXocitocina', 'C');
+    this.medMap.set('midazolamXoctreotida', 'C');
+    this.medMap.set('midazolamXomeprazol', 'I');
+    this.medMap.set('midazolamXondansetrona', 'C');
+    this.medMap.set('midazolamXoxacilina', 'C');
+    this.medMap.set('midazolamXpamidronato', 'C');
+    this.medMap.set('midazolamXpancurônio', 'C');
+    this.medMap.set('midazolamXpenicilina G potássica', 'C');
+    this.medMap.set('midazolamXpiperacilina-tazobactam', 'I');
+    this.medMap.set('midazolamXpolimixina B', 'C');
+    this.medMap.set('midazolamXpolivitamínico', 'C');
+    this.medMap.set('midazolamXprometazina', 'C');
+    this.medMap.set('midazolamXpropofol', 'I');
+    this.medMap.set('midazolamXprotamina', 'C');
+    this.medMap.set('midazolamXranitidina', 'C');
+    this.medMap.set('midazolamXremifentanil', 'C');
+    this.medMap.set('midazolamXringer lactato', 'C');
+    this.medMap.set('midazolamXrocurônio', 'C');
+    this.medMap.set('midazolamXsuccinilcolina', 'C');
+    this.medMap.set('midazolamXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('midazolamXsulfato de magnésio', 'C');
+    this.medMap.set('midazolamXtigeciclina', 'C');
+    this.medMap.set('midazolamXtiopental', 'I');
+    this.medMap.set('midazolamXtramadol', 'C');
+    this.medMap.set('midazolamXvancomicina', 'C');
+    this.medMap.set('midazolamXVASopressina', 'C');
+    this.medMap.set('midazolamXvoriconazol', 'C');
+
+    this.medMap.set('milrinonaXmorfina', 'C');
+    this.medMap.set('milrinonaXnaloxona', 'C');
+    this.medMap.set('milrinonaXnitroGLICERINA', 'C');
+    this.medMap.set('milrinonaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('milrinonaXnoradrenalina', 'C');
+    this.medMap.set('milrinonaXocitocina', 'C');
+    this.medMap.set('milrinonaXoctreotida', 'C');
+    this.medMap.set('milrinonaXondansetrona', 'I');
+    this.medMap.set('milrinonaXoxacilina', 'C');
+    this.medMap.set('milrinonaXpamidronato', 'C');
+    this.medMap.set('milrinonaXpancurônio', 'C');
+    this.medMap.set('milrinonaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('milrinonaXpolimixina B', 'C');
+    this.medMap.set('milrinonaXprometazina', 'C');
+    this.medMap.set('milrinonaXpropofol', 'C');
+    this.medMap.set('milrinonaXranitidina', 'C');
+    this.medMap.set('milrinonaXremifentanil', 'C');
+    this.medMap.set('milrinonaXringer lactato', 'C');
+    this.medMap.set('milrinonaXrocurônio', 'C');
+    this.medMap.set('milrinonaXsalbutamol', 'C');
+    this.medMap.set('milrinonaXsuccinilcolina', 'C');
+    this.medMap.set('milrinonaXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('milrinonaXsulfato de magnésio', 'C');
+    this.medMap.set('milrinonaXtigeciclina', 'C');
+    this.medMap.set('milrinonaXtiopental', 'C');
+    this.medMap.set('milrinonaXvancomicina', 'C');
+    this.medMap.set('milrinonaXVASopressina', 'C');
+    this.medMap.set('milrinonaXvoriconazol', 'C');
+    this.medMap.set('milrinonaXzidovudina', 'C');
+
+    this.medMap.set('morfinaXnaloxona', 'C');
+    this.medMap.set('morfinaXnitroGLICERINA', 'C');
+    this.medMap.set('morfinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('morfinaXnoradrenalina', 'C');
+    this.medMap.set('morfinaXocitocina', 'C');
+    this.medMap.set('morfinaXoctreotida', 'C');
+    this.medMap.set('morfinaXondansetrona', 'C');
+    this.medMap.set('morfinaXoxacilina', 'C');
+    this.medMap.set('morfinaXpamidronato', 'C');
+    this.medMap.set('morfinaXpancurônio', 'C');
+    this.medMap.set('morfinaXpenicilina G potássica', 'C');
+    this.medMap.set('morfinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('morfinaXpolimixina B', 'C');
+    this.medMap.set('morfinaXpolivitamínico', 'C');
+    this.medMap.set('morfinaXprometazina', 'C');
+    this.medMap.set('morfinaXpropofol', 'V');
+    this.medMap.set('morfinaXprotamina', 'C');
+    this.medMap.set('morfinaXranitidina', 'C');
+    this.medMap.set('morfinaXremifentanil', 'C');
+    this.medMap.set('morfinaXringer lactato', 'C');
+    this.medMap.set('morfinaXrocurônio', 'C');
+    this.medMap.set('morfinaXsuccinilcolina', 'C');
+    this.medMap.set('morfinaXsulfametoxazol-trimetoprima', 'V');
+    this.medMap.set('morfinaXsulfato de magnésio', 'C');
+    this.medMap.set('morfinaXtiamina', 'C');
+    this.medMap.set('morfinaXtigeciclina', 'C');
+    this.medMap.set('morfinaXvancomicina', 'C');
+    this.medMap.set('morfinaXVASopressina', 'C');
+    this.medMap.set('morfinaXvoriconazol', 'C');
+    this.medMap.set('morfinaXzidovudina', 'C');
+
+    this.medMap.set('naloxonaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('naloxonaXnoradrenalina', 'C');
+    this.medMap.set('naloxonaXocitocina', 'C');
+    this.medMap.set('naloxonaXoctreotida', 'C');
+    this.medMap.set('naloxonaXondansetrona', 'C');
+    this.medMap.set('naloxonaXoxacilina', 'C');
+    this.medMap.set('naloxonaXpamidronato', 'C');
+    this.medMap.set('naloxonaXpancurônio', 'C');
+    this.medMap.set('naloxonaXpenicilina G potássica', 'C');
+    this.medMap.set('naloxonaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('naloxonaXpolimixina B', 'C');
+    this.medMap.set('naloxonaXpolivitamínico', 'C');
+    this.medMap.set('naloxonaXprometazina', 'C');
+    this.medMap.set('naloxonaXpropofol', 'C');
+    this.medMap.set('naloxonaXprotamina', 'C');
+    this.medMap.set('naloxonaXranitidina', 'C');
+    this.medMap.set('naloxonaXringer lactato', 'C');
+    this.medMap.set('naloxonaXrocurônio', 'C');
+    this.medMap.set('naloxonaXsalbutamol', 'C');
+    this.medMap.set('naloxonaXsuccinilcolina', 'C');
+    this.medMap.set('naloxonaXsulfato de magnésio', 'V');
+    this.medMap.set('naloxonaXtiamina', 'C');
+    this.medMap.set('naloxonaXtigeciclina', 'C');
+    this.medMap.set('naloxonaXtiopental', 'I');
+    this.medMap.set('naloxonaXvancomicina', 'C');
+    this.medMap.set('naloxonaXVASopressina', 'C');
+    this.medMap.set('naloxonaXvoriconazol', 'C');
+
+    this.medMap.set('neostigminaXondansetrona', 'C');
+    this.medMap.set('neostigminaXpancurônio', 'C');
+    this.medMap.set('neostigminaXtiopental', 'C');
+
+    this.medMap.set('nitroGLICERINAXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('nitroGLICERINAXnoradrenalina', 'C');
+    this.medMap.set('nitroGLICERINAXocitocina', 'C');
+    this.medMap.set('nitroGLICERINAXoctreotida', 'C');
+    this.medMap.set('nitroGLICERINAXondansetrona', 'C');
+    this.medMap.set('nitroGLICERINAXoxacilina', 'C');
+    this.medMap.set('nitroGLICERINAXpamidronato', 'C');
+    this.medMap.set('nitroGLICERINAXpancurônio', 'C');
+    this.medMap.set('nitroGLICERINAXpenicilina G potássica', 'C');
+    this.medMap.set('nitroGLICERINAXpiperacilina-tazobactam', 'C');
+    this.medMap.set('nitroGLICERINAXpolimixina B', 'C');
+    this.medMap.set('nitroGLICERINAXpolivitamínico', 'C');
+    this.medMap.set('nitroGLICERINAXprometazina', 'C');
+    this.medMap.set('nitroGLICERINAXpropofol', 'V');
+    this.medMap.set('nitroGLICERINAXprotamina', 'C');
+    this.medMap.set('nitroGLICERINAXranitidina', 'C');
+    this.medMap.set('nitroGLICERINAXremifentanil', 'C');
+    this.medMap.set('nitroGLICERINAXringer lactato', 'C');
+    this.medMap.set('nitroGLICERINAXrocurônio', 'C');
+    this.medMap.set('nitroGLICERINAXsuccinilcolina', 'C');
+    this.medMap.set('nitroGLICERINAXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('nitroGLICERINAXsulfato de magnésio', 'C');
+    this.medMap.set('nitroGLICERINAXtiamina', 'C');
+    this.medMap.set('nitroGLICERINAXtigeciclina', 'C');
+    this.medMap.set('nitroGLICERINAXtiopental', 'C');
+    this.medMap.set('nitroGLICERINAXvancomicina', 'C');
+    this.medMap.set('nitroGLICERINAXVASopressina', 'C');
+    this.medMap.set('nitroGLICERINAXvoriconazol', 'C');
+
+    this.medMap.set('nitroPRUSSIATO de sódioXnoradrenalina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXocitocina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXoctreotida', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXondansetrona', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXoxacilina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXpamidronato', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXpancurônio', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXpenicilina G potássica', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXpiperacilina-tazobactam', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXpolimixina B', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXpolivitamínico', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXprometazina', 'I');
+    this.medMap.set('nitroPRUSSIATO de sódioXpropofol', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXprotamina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXranitidina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXringer lactato', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXrocurônio', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXsalbutamol', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXsuccinilcolina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('nitroPRUSSIATO de sódioXsulfato de magnésio', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXtiamina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXtigeciclina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXvancomicina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXVASopressina', 'C');
+    this.medMap.set('nitroPRUSSIATO de sódioXvoriconazol', 'I');
+
+    this.medMap.set('noradrenalinaXocitocina', 'C');
+    this.medMap.set('noradrenalinaXoctreotida', 'C');
+    this.medMap.set('noradrenalinaXondansetrona', 'C');
+    this.medMap.set('noradrenalinaXoxacilina', 'C');
+    this.medMap.set('noradrenalinaXpamidronato', 'C');
+    this.medMap.set('noradrenalinaXpancurônio', 'C');
+    this.medMap.set('noradrenalinaXpenicilina G potássica', 'C');
+    this.medMap.set('noradrenalinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('noradrenalinaXpolimixina B', 'C');
+    this.medMap.set('noradrenalinaXpolivitamínico', 'C');
+    this.medMap.set('noradrenalinaXprometazina', 'C');
+    this.medMap.set('noradrenalinaXpropofol', 'C');
+    this.medMap.set('noradrenalinaXprotamina', 'C');
+    this.medMap.set('noradrenalinaXranitidina', 'C');
+    this.medMap.set('noradrenalinaXremifentanil', 'C');
+    this.medMap.set('noradrenalinaXringer lactato', 'C');
+    this.medMap.set('noradrenalinaXsalbutamol', 'C');
+    this.medMap.set('noradrenalinaXsuccinilcolina', 'C');
+    this.medMap.set('noradrenalinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('noradrenalinaXsulfato de magnésio', 'C');
+    this.medMap.set('noradrenalinaXtiamina', 'C');
+    this.medMap.set('noradrenalinaXtigeciclina', 'C');
+    this.medMap.set('noradrenalinaXtiopental', 'I');
+    this.medMap.set('noradrenalinaXvancomicina', 'C');
+    this.medMap.set('noradrenalinaXVASopressina', 'C');
+    this.medMap.set('noradrenalinaXvoriconazol', 'C');
+
+    this.medMap.set('ocitocinaXondansetrona', 'C');
+    this.medMap.set('ocitocinaXoxacilina', 'C');
+    this.medMap.set('ocitocinaXpamidronato', 'C');
+    this.medMap.set('ocitocinaXpenicilina G potássica', 'C');
+    this.medMap.set('ocitocinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('ocitocinaXpolimixina B', 'C');
+    this.medMap.set('ocitocinaXpolivitamínico', 'C');
+    this.medMap.set('ocitocinaXprometazina', 'C');
+    this.medMap.set('ocitocinaXprotamina', 'C');
+    this.medMap.set('ocitocinaXranitidina', 'C');
+    this.medMap.set('ocitocinaXringer lactato', 'C');
+    this.medMap.set('ocitocinaXsuccinilcolina', 'C');
+    this.medMap.set('ocitocinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ocitocinaXsulfato de magnésio', 'C');
+    this.medMap.set('ocitocinaXtiamina', 'C');
+    this.medMap.set('ocitocinaXtigeciclina', 'C');
+    this.medMap.set('ocitocinaXtiopental', 'C');
+    this.medMap.set('ocitocinaXvancomicina', 'C');
+    this.medMap.set('ocitocinaXVASopressina', 'C');
+    this.medMap.set('ocitocinaXvoriconazol', 'C');
+    this.medMap.set('ocitocinaXzidovudina', 'C');
+
+    this.medMap.set('octreotidaXondansetrona', 'C');
+    this.medMap.set('octreotidaXpamidronato', 'C');
+    this.medMap.set('octreotidaXpancurônio', 'C');
+    this.medMap.set('octreotidaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('octreotidaXpolimixina B', 'C');
+    this.medMap.set('octreotidaXprometazina', 'C');
+    this.medMap.set('octreotidaXranitidina', 'C');
+    this.medMap.set('octreotidaXremifentanil', 'C');
+    this.medMap.set('octreotidaXrocurônio', 'C');
+    this.medMap.set('octreotidaXsuccinilcolina', 'C');
+    this.medMap.set('octreotidaXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('octreotidaXsulfato de magnésio', 'C');
+    this.medMap.set('octreotidaXtigeciclina', 'C');
+    this.medMap.set('octreotidaXtiopental', 'C');
+    this.medMap.set('octreotidaXvancomicina', 'C');
+    this.medMap.set('octreotidaXVASopressina', 'C');
+    this.medMap.set('octreotidaXvoriconazol', 'C');
+    this.medMap.set('octreotidaXzidovudina', 'C');
+
+    this.medMap.set('omeprazolXtigeciclina', 'I');
+    this.medMap.set('omeprazolXvancomicina', 'I');
+
+    this.medMap.set('ondansetronaXoxacilina', 'C');
+    this.medMap.set('ondansetronaXpamidronato', 'C');
+    this.medMap.set('ondansetronaXpancurônio', 'C');
+    this.medMap.set('ondansetronaXpenicilina G potássica', 'C');
+    this.medMap.set('ondansetronaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('ondansetronaXpolimixina B', 'C');
+    this.medMap.set('ondansetronaXpolivitamínico', 'C');
+    this.medMap.set('ondansetronaXprometazina', 'C');
+    this.medMap.set('ondansetronaXpropofol', 'C');
+    this.medMap.set('ondansetronaXprotamina', 'C');
+    this.medMap.set('ondansetronaXranitidina', 'C');
+    this.medMap.set('ondansetronaXremifentanil', 'C');
+    this.medMap.set('ondansetronaXringer lactato', 'C');
+    this.medMap.set('ondansetronaXrocurônio', 'C');
+    this.medMap.set('ondansetronaXsuccinilcolina', 'C');
+    this.medMap.set('ondansetronaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ondansetronaXsulfato de magnésio', 'C');
+    this.medMap.set('ondansetronaXtigeciclina', 'C');
+    this.medMap.set('ondansetronaXtiopental', 'I');
+    this.medMap.set('ondansetronaXtramadol', 'C');
+    this.medMap.set('ondansetronaXvancomicina', 'C');
+    this.medMap.set('ondansetronaXVASopressina', 'C');
+    this.medMap.set('ondansetronaXvoriconazol', 'C');
+    this.medMap.set('ondansetronaXzidovudina', 'C');
+
+    this.medMap.set('oxacilinaXpenicilina G potássica', 'C');
+    this.medMap.set('oxacilinaXpolimixina B', 'I');
+    this.medMap.set('oxacilinaXpolivitamínico', 'C');
+    this.medMap.set('oxacilinaXprometazina', 'I');
+    this.medMap.set('oxacilinaXprotamina', 'I');
+    this.medMap.set('oxacilinaXranitidina', 'C');
+    this.medMap.set('oxacilinaXringer lactato', 'C');
+    this.medMap.set('oxacilinaXsuccinilcolina', 'C');
+    this.medMap.set('oxacilinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('oxacilinaXsulfato de magnésio', 'V');
+    this.medMap.set('oxacilinaXtiamina', 'C');
+    this.medMap.set('oxacilinaXVASopressina', 'C');
+    this.medMap.set('oxacilinaXzidovudina', 'C');
+
+    this.medMap.set('pamidronatoXpancurônio', 'C');
+    this.medMap.set('pamidronatoXpiperacilina-tazobactam', 'C');
+    this.medMap.set('pamidronatoXpolimixina B', 'C');
+    this.medMap.set('pamidronatoXprometazina', 'C');
+    this.medMap.set('pamidronatoXranitidina', 'C');
+    this.medMap.set('pamidronatoXremifentanil', 'C');
+    this.medMap.set('pamidronatoXrocurônio', 'C');
+    this.medMap.set('pamidronatoXsuccinilcolina', 'C');
+    this.medMap.set('pamidronatoXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('pamidronatoXsulfato de magnésio', 'C');
+    this.medMap.set('pamidronatoXtigeciclina', 'C');
+    this.medMap.set('pamidronatoXtiopental', 'C');
+    this.medMap.set('pamidronatoXvancomicina', 'C');
+    this.medMap.set('pamidronatoXVASopressina', 'C');
+    this.medMap.set('pamidronatoXvoriconazol', 'C');
+    this.medMap.set('pamidronatoXzidovudina', 'C');
+
+    this.medMap.set('pancurônioXpiperacilina-tazobactam', 'C');
+    this.medMap.set('pancurônioXpolimixina B', 'C');
+    this.medMap.set('pancurônioXprometazina', 'C');
+    this.medMap.set('pancurônioXpropofol', 'V');
+    this.medMap.set('pancurônioXranitidina', 'C');
+    this.medMap.set('pancurônioXremifentanil', 'C');
+    this.medMap.set('pancurônioXringer lactato', 'C');
+    this.medMap.set('pancurônioXsuccinilcolina', 'C');
+    this.medMap.set('pancurônioXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('pancurônioXsulfato de magnésio', 'C');
+    this.medMap.set('pancurônioXtigeciclina', 'C');
+    this.medMap.set('pancurônioXtiopental', 'I');
+    this.medMap.set('pancurônioXvancomicina', 'C');
+    this.medMap.set('pancurônioXvoriconazol', 'C');
+    this.medMap.set('pancurônioXzidovudina', 'C');
+
+    this.medMap.set('penicilina G potássicaXpolivitamínico', 'C');
+    this.medMap.set('penicilina G potássicaXprotamina', 'I');
+    this.medMap.set('penicilina G potássicaXranitidina', 'C');
+    this.medMap.set('penicilina G potássicaXringer lactato', 'C');
+    this.medMap.set('penicilina G potássicaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('penicilina G potássicaXsulfato de magnésio', 'C');
+    this.medMap.set('penicilina G potássicaXtiamina', 'C');
+    this.medMap.set('penicilina G potássicaXVASopressina', 'C');
+
+    this.medMap.set('piperacilina-tazobactamXpolimixina B', 'I');
+    this.medMap.set('piperacilina-tazobactamXprometazina', 'I');
+    this.medMap.set('piperacilina-tazobactamXranitidina', 'C');
+    this.medMap.set('piperacilina-tazobactamXremifentanil', 'C');
+    this.medMap.set('piperacilina-tazobactamXringer lactato', 'I');
+    this.medMap.set('piperacilina-tazobactamXrocurônio', 'I');
+    this.medMap.set('piperacilina-tazobactamXsuccinilcolina', 'C');
+    this.medMap.set('piperacilina-tazobactamXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('piperacilina-tazobactamXsulfato de magnésio', 'C');
+    this.medMap.set('piperacilina-tazobactamXtigeciclina', 'C');
+    this.medMap.set('piperacilina-tazobactamXtiopental', 'I');
+    this.medMap.set('piperacilina-tazobactamXVASopressina', 'C');
+    this.medMap.set('piperacilina-tazobactamXvoriconazol', 'C');
+    this.medMap.set('piperacilina-tazobactamXzidovudina', 'C');
+
+    this.medMap.set('polimixina BXpolivitamínico', 'C');
+    this.medMap.set('polimixina BXprometazina', 'C');
+    this.medMap.set('polimixina BXprotamina', 'C');
+    this.medMap.set('polimixina BXranitidina', 'C');
+    this.medMap.set('polimixina BXringer lactato', 'C');
+    this.medMap.set('polimixina BXsuccinilcolina', 'C');
+    this.medMap.set('polimixina BXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('polimixina BXsulfato de magnésio', 'C');
+    this.medMap.set('polimixina BXtiamina', 'C');
+    this.medMap.set('polimixina BXtigeciclina', 'C');
+    this.medMap.set('polimixina BXvancomicina', 'C');
+    this.medMap.set('polimixina BXVASopressina', 'C');
+    this.medMap.set('polimixina BXvoriconazol', 'C');
+
+    this.medMap.set('polivitamínicoXprotamina', 'C');
+    this.medMap.set('polivitamínicoXranitidina', 'C');
+    this.medMap.set('polivitamínicoXringer lactato', 'C');
+    this.medMap.set('polivitamínicoXsuccinilcolina', 'C');
+    this.medMap.set('polivitamínicoXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('polivitamínicoXsulfato de magnésio', 'C');
+    this.medMap.set('polivitamínicoXtiamina', 'C');
+    this.medMap.set('polivitamínicoXvancomicina', 'C');
+    this.medMap.set('polivitamínicoXVASopressina', 'C');
+
+    this.medMap.set('prometazinaXprotamina', 'C');
+    this.medMap.set('prometazinaXranitidina', 'C');
+    this.medMap.set('prometazinaXremifentanil', 'C');
+    this.medMap.set('prometazinaXringer lactato', 'C');
+    this.medMap.set('prometazinaXrocurônio', 'C');
+    this.medMap.set('prometazinaXsuccinilcolina', 'C');
+    this.medMap.set('prometazinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('prometazinaXsulfato de magnésio', 'C');
+    this.medMap.set('prometazinaXtiamina', 'C');
+    this.medMap.set('prometazinaXtigeciclina', 'C');
+    this.medMap.set('prometazinaXvancomicina', 'C');
+    this.medMap.set('prometazinaXVASopressina', 'C');
+    this.medMap.set('prometazinaXvoriconazol', 'C');
+
+    this.medMap.set('propofolXranitidina', 'C');
+    this.medMap.set('propofolXremifentanil', 'I');
+    this.medMap.set('propofolXringer lactato', 'C');
+    this.medMap.set('propofolXsuccinilcolina', 'V');
+    this.medMap.set('propofolXsulfato de magnésio', 'V');
+    this.medMap.set('propofolXtigeciclina', 'C');
+    this.medMap.set('propofolXtiopental', 'V');
+    this.medMap.set('propofolXvancomicina', 'V');
+
+    this.medMap.set('protaminaXranitidina', 'C');
+    this.medMap.set('protaminaXringer lactato', 'C');
+    this.medMap.set('protaminaXsuccinilcolina', 'C');
+    this.medMap.set('protaminaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('protaminaXsulfato de magnésio', 'C');
+    this.medMap.set('protaminaXtiamina', 'C');
+    this.medMap.set('protaminaXvancomicina', 'C');
+    this.medMap.set('protaminaXVASopressina', 'C');
+
+    this.medMap.set('ranitidinaXremifentanil', 'C');
+    this.medMap.set('ranitidinaXringer lactato', 'C');
+    this.medMap.set('ranitidinaXrocurônio', 'C');
+    this.medMap.set('ranitidinaXsuccinilcolina', 'C');
+    this.medMap.set('ranitidinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ranitidinaXsulfato de magnésio', 'C');
+    this.medMap.set('ranitidinaXtiamina', 'C');
+    this.medMap.set('ranitidinaXtigeciclina', 'C');
+    this.medMap.set('ranitidinaXtiopental', 'C');
+    this.medMap.set('ranitidinaXtramadol', 'C');
+    this.medMap.set('ranitidinaXvancomicina', 'C');
+    this.medMap.set('ranitidinaXVASopressina', 'C');
+    this.medMap.set('ranitidinaXzidovudina', 'C');
+
+    this.medMap.set('remifentanilXrocurônio', 'C');
+    this.medMap.set('remifentanilXsulfametoxazol-trimetoprima', 'C');
+    this.medMap.set('remifentanilXsulfato de magnésio', 'C');
+    this.medMap.set('remifentanilXtigeciclina', 'C');
+    this.medMap.set('remifentanilXtiopental', 'C');
+    this.medMap.set('remifentanilXvancomicina', 'C');
+    this.medMap.set('remifentanilXVASopressina', 'C');
+    this.medMap.set('remifentanilXvoriconazol', 'C');
+    this.medMap.set('remifentanilXzidovudina', 'C');
+
+    this.medMap.set('ringer lactatoXrocurônio', 'C');
+    this.medMap.set('ringer lactatoXsalbutamol', 'C');
+    this.medMap.set('ringer lactatoXsuccinilcolina', 'C');
+    this.medMap.set('ringer lactatoXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('ringer lactatoXsulfato de magnésio', 'C');
+    this.medMap.set('ringer lactatoXtiamina', 'C');
+    this.medMap.set('ringer lactatoXtigeciclina', 'C');
+    this.medMap.set('ringer lactatoXtramadol', 'C');
+    this.medMap.set('ringer lactatoXvancomicina', 'C');
+    this.medMap.set('ringer lactatoXVASopressina', 'C');
+    this.medMap.set('ringer lactatoXvoriconazol', 'C');
+
+    this.medMap.set('rocurônioXsalbutamol', 'C');
+    this.medMap.set('rocurônioXsulfato de magnésio', 'C');
+    this.medMap.set('rocurônioXtigeciclina', 'C');
+    this.medMap.set('rocurônioXtiopental', 'I');
+    this.medMap.set('rocurônioXVASopressina', 'C');
+    this.medMap.set('rocurônioXvoriconazol', 'C');
+    this.medMap.set('rocurônioXzidovudina', 'C');
+
+    this.medMap.set('salbutamolXsulfato de magnésio', 'C');
+
+    this.medMap.set('succinilcolinaXsulfametoxazol-trimetoprima', 'I');
+    this.medMap.set('succinilcolinaXsulfato de magnésio', 'C');
+    this.medMap.set('succinilcolinaXtiamina', 'C');
+    this.medMap.set('succinilcolinaXtigeciclina', 'C');
+    this.medMap.set('succinilcolinaXtiopental', 'I');
+    this.medMap.set('succinilcolinaXvancomicina', 'C');
+    this.medMap.set('succinilcolinaXVASopressina', 'C');
+    this.medMap.set('succinilcolinaXvoriconazol', 'C');
+
+    this.medMap.set('sulfametoxazol-trimetoprimaXsulfato de magnésio', 'V');
+    this.medMap.set('sulfametoxazol-trimetoprimaXtiamina', 'I');
+    this.medMap.set('sulfametoxazol-trimetoprimaXtigeciclina', 'C');
+    this.medMap.set('sulfametoxazol-trimetoprimaXvancomicina', 'I');
+    this.medMap.set('sulfametoxazol-trimetoprimaXVASopressina', 'V');
+    this.medMap.set('sulfametoxazol-trimetoprimaXvoriconazol', 'C');
+    this.medMap.set('sulfametoxazol-trimetoprimaXzidovudina', 'C');
+
+    this.medMap.set('sulfato de magnésioXtiamina', 'C');
+    this.medMap.set('sulfato de magnésioXtigeciclina', 'C');
+    this.medMap.set('sulfato de magnésioXvancomicina', 'C');
+    this.medMap.set('sulfato de magnésioXVASopressina', 'C');
+    this.medMap.set('sulfato de magnésioXvoriconazol', 'C');
+
+    this.medMap.set('tiaminaXvancomicina', 'C');
+    this.medMap.set('tiaminaXVASopressina', 'C');
+
+    this.medMap.set('tigeciclinaXtiopental', 'C');
+    this.medMap.set('tigeciclinaXvancomicina', 'C');
+    this.medMap.set('tigeciclinaXVASopressina', 'C');
+    this.medMap.set('tigeciclinaXvoriconazol', 'V');
+    this.medMap.set('tigeciclinaXzidovudina', 'C');
+
+    this.medMap.set('tiopentalXVASopressina', 'C');
+    this.medMap.set('tiopentalXvoriconazol', 'I');
+
+    this.medMap.set('vancomicinaXVASopressina', 'C');
+    this.medMap.set('vancomicinaXvoriconazol', 'C');
+    this.medMap.set('vancomicinaXzidovudina', 'C');
+
+    this.medMap.set('VASopressinaXvoriconazol', 'C');
+    this.medMap.set('VASopressinaXzidovudina', 'C');
+
+    this.medMap.set('voriconazolXzidovudina', 'C');
+
   }
 
   medicamento1change(e: any) {
-    if(this.form.valid) {
+    if (this.form.valid) {
       console.log(this.form.get('medicine1')?.value, this.form.get('medicine2')?.value);
-      const key = this.getKey();
-      console.log(key);
-      console.log(this.medMap.get(key));
-
+      let key = this.getKey(false);
+      this.compatibilidade = this.getInteracao(key);
+      if (this.compatibilidade === undefined) {
+        key = this.getKey(true);
+        this.compatibilidade = this.getInteracao(key);
+      }
     }
-
   }
 
-  getKey(): string {
-    return this.form.get('medicine1')?.value +'X'+ this.form.get('medicine2')?.value;
+  getInteracao(key: string): string | undefined {
+    return this.medMap.get(key);
+  }
+
+  getKey(inverse: boolean): string {
+    if( inverse) {
+      this.form.get('medicine2')?.value + 'X' + this.form.get('medicine1')?.value;
+    }
+    return this.form.get('medicine1')?.value + 'X' + this.form.get('medicine2')?.value;
+  }
+
+  getIcon(): string{
+    if( this.compatibilidade === undefined) {
+      return 'info_outline';
+    } else if ( this.compatibilidade === 'C') {
+      return 'thumb_up';
+    } else if ( this.compatibilidade === 'I'){
+      return 'thumb_down';
+    } else {
+      return 'thumbs_up_down';
+    }
+  }
+
+  getText(): string {
+    if( this.compatibilidade === undefined) {
+      return 'Não testado';
+    } else if ( this.compatibilidade === 'C') {
+      return 'Compatível';
+    } else if ( this.compatibilidade === 'I'){
+      return 'Incompatível';
+    } else {
+      return 'Variável';
+    }
   }
 
 }

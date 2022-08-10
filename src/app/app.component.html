@@ -1,24 +1,45 @@
-<div class="container">
+<div class="container"
+  [ngClass]="{'green': compatibilidade === 'C', 'yellow': compatibilidade === 'V', 'red': compatibilidade === 'I' }">
   <form class="row" [formGroup]="form">
-  <div class="col-md-6 col-sm-12">
-    <mat-form-field appearance="fill">
-      <mat-label>Medicamento 1:</mat-label>
-      <mat-select formControlName="medicine1" (selectionChange)="medicamento1change($event.value)">
-        <mat-option *ngFor="let medicine of medList" [value]="medicine.name">
-          {{medicine.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <div class="col-md-6 col-sm-12">
+      <mat-form-field appearance="fill">
+        <mat-label>Medicamento 1:</mat-label>
+        <input type="text"
+          placeholder="Escolha um medicamento"
+          aria-label="Number"
+          matInput
+          formControlName="medicine1"
+          [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="medicamento1change($event)">
+          <mat-option *ngFor="let medicine of filteredOptions1 | async" [value]="medicine">
+            {{medicine}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+    <div class="col-md-6 col-sm-12">
+      <mat-form-field appearance="fill">
+        <mat-label>Medicamento 2:</mat-label>
+        <input type="text"
+          placeholder="Escolha um medicamento"
+          aria-label="Number"
+          matInput
+          formControlName="medicine2"
+          [matAutocomplete]="auto2">
+        <mat-autocomplete #auto2="matAutocomplete" (optionSelected)="medicamento1change($event)">
+          <mat-option *ngFor="let medicine of filteredOptions2 | async" [value]="medicine">
+            {{medicine}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+
+  </form>
+  <div class="row">
+    <div class="col-sm-12 text">
+      <mat-icon aria-hidden="false">{{getIcon()}}</mat-icon>
+      <p>{{getText()}}</p>
+    </div>
   </div>
-  <div class="col-md-6 col-sm-12">
-    <mat-form-field appearance="fill">
-      <mat-label>Medicamento 2:</mat-label>
-      <mat-select formControlName="medicine2" (selectionChange)="medicamento1change($event.value)">
-        <mat-option *ngFor="let medicine of medList" [value]="medicine.name">
-          {{medicine.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
-</form>
 </div>

@@ -1,6 +1,38 @@
 .container {
   padding: 50px;
+  color: black;
+  max-width: 100vw;
+  margin-left: unset;
+  margin-right: unset;
+  height: 100vh;
   .row {
     text-align: center;
+    .text {
+      text-align: center;
+      mat-icon {
+        font-size: 160px;
+        height: 100%;
+        width: 100%;
+      }
+      p {
+        font-size: 50px;
+      }
+    }
   }
+
+  &.green {
+    background-color: green;
+    color: white;
+  }
+
+  &.yellow {
+    background-color: yellow;
+  }
+
+  &.red {
+    background-color:  red;
+    color: white;
+  }
+
 }
+

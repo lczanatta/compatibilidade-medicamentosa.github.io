@@ -9296,5 +9296,9 @@ h3 {
     border-color: #dee2e6;
   }
 }
+.mat-form-field-flex {
+  background-color: white !important;
+  color: black;
+}
 
 /*# sourceMappingURL=styles.css.map*/
