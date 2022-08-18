@@ -51,6 +51,7 @@ export class AppComponent implements OnInit {
   'dantroleno',
   'DESMopressina',
   'dexametasona',
+  'dexmedetomidina',
   'diazepam',
   'dimenidrato-piridoxina',
   'dipirona',
@@ -3853,6 +3854,21 @@ export class AppComponent implements OnInit {
     this.medMap.set('VASopressinaXzidovudina', 'C');
 
     this.medMap.set('voriconazolXzidovudina', 'C');
+
+    this.medMap.set('dexmedetomidinaXfenitoína', 'I');
+    this.medMap.set('dexmedetomidinaXfentanil', 'C');
+    this.medMap.set('dexmedetomidinaXfurosemida', 'C');
+    this.medMap.set('dexmedetomidinaXmeropenem', 'C');
+    this.medMap.set('dexmedetomidinaXmetilprednisolona', 'C');
+    this.medMap.set('dexmedetomidinaXmetoclopramida', 'C');
+    this.medMap.set('dexmedetomidinaXmidazolam', 'C');
+    this.medMap.set('dexmedetomidinaXmorfina', 'C');
+    this.medMap.set('dexmedetomidinaXnitroPRUSSIATO de sódio', 'C');
+    this.medMap.set('dexmedetomidinaXnoradrenalina', 'C');
+    this.medMap.set('dexmedetomidinaXpancurônio', 'C');
+    this.medMap.set('dexmedetomidinaXpiperacilina-tazobactam', 'C');
+    this.medMap.set('dexmedetomidinaXpropofol', 'C');
+    this.medMap.set('dexmedetomidinaXvancomicina', 'C');
 
   }
 
